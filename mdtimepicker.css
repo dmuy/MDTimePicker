@@ -45,6 +45,8 @@
 .mdtp__time_holder {
 	display: flex;
 	flex-direction: row;
+	align-items: center;
+	justify-content: center;
 	font-size: 46px;
 	padding: 20px 24px;
 	color: rgba(255,255,255,.5);
