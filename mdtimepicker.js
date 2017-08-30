@@ -13,6 +13,39 @@
 	var MDTP_DATA = "mdtimepicker", HOUR_START_DEG = 120, MIN_START_DEG = 90, END_DEG = 360, HOUR_DEG_INCR = 30, MIN_DEG_INCR = 6,
 		EX_KEYS = [9,112,113,114,115,116,117,118,119,120,121,122,123];
 
+	var Time = function (hour, minute) {
+		this.hour = hour;
+		this.minute = minute;
+
+		this.format = function(format, hourPadding) {
+			var that = this, is24Hour = (format.match(/h/g) || []).length > 1;
+
+			return $.trim(format.replace(/(hh|h|mm|ss|tt|t)/g, function (e) { 
+				switch(e.toLowerCase()){
+					case 'h':
+						var hour = that.getHour(true);
+
+						return (hourPadding && hour < 10 ? '0' + hour : hour);
+					case 'hh': return (that.hour < 10 ? '0' + that.hour : that.hour);
+					case 'mm': return (that.minute < 10 ? '0' + that.minute : that.minute);
+					case 'ss': return '00';
+					case 't': return is24Hour ? '' : that.getT().toLowerCase();
+					case 'tt': return is24Hour ? '' : that.getT();
+				}
+			}));
+		};
+
+		this.setHour = function (value) { this.hour = value; };
+		this.getHour = function (is12Hour) { return is12Hour ? this.hour === 0 || this.hour === 12 ? 12 : (this.hour % 12) : this.hour; };
+		this.invert = function () {
+			if (this.getT() === 'AM') this.setHour(this.getHour() + 12);
+			else if (this.getHour() >= 12) this.setHour(this.getHour() - 12);
+		};
+		this.setMinutes = function (value) { this.minute = value; }
+		this.getMinutes = function (value) { return this.minute; }
+		this.getT = function() { return this.hour < 12 ? 'AM' : 'PM'; };
+	};
+
 	var MDTimePicker = function (input, config) {
 		var that = this;
 
@@ -22,11 +55,11 @@
 		this.mTimeout = null;
 		this.input = $(input);
 		this.config = config;
-		this.time = { hour: 12, minute: 0, t: 'AM' };
-		this.selected = { hour: 12, minute: 0, t: 'AM' }
+		this.time = new Time(0, 0);
+		this.selected = new Time(0,0);
 		this.timepicker = {
-			overlay : $('<div class="mdtp__overlay animate hidden"></div>'),
-			wrapper : $('<div class="mdtp__wrapper animate"></div>'),
+			overlay : $('<div class="mdtimepicker hidden"></div>'),
+			wrapper : $('<div class="mdtp__wrapper"></div>'),
 			timeHolder : {
 				wrapper: $('<section class="mdtp__time_holder"></section>'),
 				hour: $('<span class="mdtp__time_h">12</span>'),
@@ -58,8 +91,8 @@
 
 		that.setup(picker).appendTo('body');
 
-		picker.clockHolder.am.click(function () { that.setT('am'); });
-		picker.clockHolder.pm.click(function () { that.setT('pm'); });
+		picker.clockHolder.am.click(function () { if(that.selected.getT() !== 'AM') that.setT('am'); });
+		picker.clockHolder.pm.click(function () { if (that.selected.getT() !== 'PM') that.setT('pm'); });
 		picker.timeHolder.hour.click(function () { if (that.activeView !== 'hours') that.switchView('hours'); });
 		picker.timeHolder.minute.click(function () { if (that.activeView !== 'minutes') that.switchView('minutes'); });
 		picker.clockHolder.buttonsHolder.btnOk.click(function () {
@@ -78,13 +111,13 @@
 	        .keydown(function (e) { if (e.keyCode === 13) that.show(); });
 
 		if(that.input.val() !== '') {
-			var time = that.parseTime(that.input.val(), 'hh:mm t');
+			var time = that.parseTime(that.input.val(), that.config.format);
 
 			that.setValue(time);
 		} else {
-			var now = new Date(), h = now.getHours() % 12, m = now.getMinutes(), t = now.getHours() > 12 ? 'PM' : 'AM';
+			var time = that.getSystemTime();
 
-			that.setTime({ hour: h, minute: m, t: t });
+			that.time = new Time(time.hour, time.minute);
 		}
 
 		that.resetSelected();
@@ -95,6 +128,8 @@
 		constructor : MDTimePicker,
 
 		setup : function (picker) {
+			if (typeof picker === 'undefined') throw new Error('Expecting a value.');
+
 			var that = this, overlay = picker.overlay, wrapper = picker.wrapper,
 				time = picker.timeHolder, clock = picker.clockHolder;
 
@@ -168,18 +203,24 @@
 		},
 
 		setHour : function (hour) {
-			this.selected.hour = hour;
-			this.timepicker.timeHolder.hour.text(hour);
+			if (typeof hour === 'undefined') throw new Error('Expecting a value.');
+
+			var that = this;
+
+			this.selected.setHour(hour);
+			this.timepicker.timeHolder.hour.text(this.selected.getHour(true));
 
 			this.timepicker.clockHolder.clock.hours.children('div').each(function (idx, div) {
 				var el = $(div), val = el.data('hour');
 
-				el[val === hour ? 'addClass' : 'removeClass']('active');
+				el[val === that.selected.getHour(true) ? 'addClass' : 'removeClass']('active');
 			});
 		},
 
 		setMinute : function (minute) {
-			this.selected.minute = minute;
+			if (typeof minute === 'undefined') throw new Error('Expecting a value.');
+
+			this.selected.setMinutes(minute);
 			this.timepicker.timeHolder.minute.text(minute < 10 ? '0' + minute : minute);
 
 			this.timepicker.clockHolder.clock.minutes.children('div').each(function (idx, div) {
@@ -190,76 +231,62 @@
 		},
 
 		setT : function (value) {
-			var t = value.toUpperCase();
-			this.selected.t = t;
+			if (typeof value === 'undefined') throw new Error('Expecting a value.');
+
+			if (this.selected.getT() !== value.toUpperCase()) this.selected.invert();
+
+			var t = this.selected.getT();
 
 			this.timepicker.timeHolder.am_pm.text(t);
 			this.timepicker.clockHolder.am[t === 'AM' ? 'addClass' : 'removeClass']('active');
 			this.timepicker.clockHolder.pm[t === 'PM' ? 'addClass' : 'removeClass']('active');
 		},
 
-		setTime: function (time) {
-			this.time.hour = time.hour;
-			this.time.minute = time.minute;
-			this.time.t = time.t;
-		},
-
 		setValue : function (value) {
-			var time = typeof value === 'string' ? this.parseTime(value, 'hh:mm t') : value;
+			if (typeof value === 'undefined') throw new Error('Expecting a value.');
 
-			this.setTime(time);
+			var time = typeof value === 'string' ? this.parseTime(value, this.config.format) : value;
+
+			this.time = new Time(time.hour, time.minute);
 
 			var formatted = this.getFormattedTime();
 
-			this.input.val(formatted.time)
-				.attr('value', formatted.time)
-				.attr('data-time', formatted.value);
+			this.input.val(formatted.value)
+				.attr('data-time', formatted.time)
+				.attr('value', formatted.value);
 		},
 
 		resetSelected : function () {
 			this.setHour(this.time.hour);
 			this.setMinute(this.time.minute);
-			this.setT(this.time.t);
+			this.setT(this.time.getT());
 		},
 
-		value: function () { return this.formatTime(this.config.valueFormat, this.time, this.config._24Hour) },
-
 		getFormattedTime : function () {
-			var hFormat = this.config.hPadding ? 'hh' : 'h',
-				tFormat = this.config.lowerCase ? 't' : 'tt',
-				time = this.formatTime(hFormat + ':mm ' + tFormat, this.time, false),
-				tValue = this.formatTime(this.config.valueFormat, this.time, this.config._24Hour);
+			var time = this.time.format(this.config.timeFormat, false),
+				tValue = this.time.format(this.config.format, this.config.hourPadding);
 
 			return { time: time, value: tValue };
 		},
 
-		formatTime : function (format, time, _24Hour) {
-			var hour = _24Hour && time.t.toLowerCase() === 'pm' ? (time.hour + 12) % 24 : time.hour;
+		getSystemTime : function () {
+			var now = new Date();
 
-			return $.trim(format.replace(/(hh|h|mm|ss|tt|t)/gi, function (e) { 
-				switch(e.toLowerCase()){
-					case 'h': return hour;
-					case 'hh': return (hour < 10 ? '0' + hour : hour);
-					case 'mm': return (time.minute < 10 ? '0' + time.minute : time.minute);
-					case 'ss': return '00';
-					case 't': return _24Hour ? '' : time.t.toLowerCase();
-					case 'tt': return _24Hour ? '' : time.t.toUpperCase();
-				}
-			}));
+			return new Time (now.getHours(), now.getMinutes());
 		},
 
 		parseTime : function (time, tFormat) {
-			var that = this, format = typeof tFormat === 'undefined' ? that.config.valueFormat : tFormat,
-				hLength = (format.match(/h/g) || []).length, mLength = (format.match(/m/g) || []).length, tLength = (format.match(/t/g) || []).length,
-				hNoPadding = hLength === 1, timeLength = time.length,
+			var that = this, format = typeof tFormat === 'undefined' ? that.config.format : tFormat,
+				hLength = that.config.hourPadding ? 2 : (format.match(/h/g) || []).length,
+				is24Hour = hLength > 1,
+				mLength = (format.match(/m/g) || []).length, tLength = (format.match(/t/g) || []).length,
+				timeLength = time.length,
 				fH = format.indexOf('h'), lH = format.lastIndexOf('h'),
-				fM = format.indexOf('m'), lM = format.lastIndexOf('m'),
-				fT = format.indexOf('t'),
 				hour = '', min = '', t = '';
 
 			// Parse hour
-			if (!hNoPadding) {
-				hour = time.substr(fH, mLength);
+			if (that.config.hourPadding || is24Hour) {
+				hour = time.substr(fH, 2);
 			} else {
 				var prev = format.substring(fH - 1, fH), next = format.substring(lH + 1, lH + 2);
 
@@ -272,21 +299,32 @@
 				}
 			}
 
+			format = format.replace(/(hh|h)/g, hour);
+
+			var fM = format.indexOf('m'), lM = format.lastIndexOf('m'),
+				fT = format.indexOf('t');
+
 			// Parse minute
 			var prevM = format.substring(fM - 1, fM), nextM = format.substring(lM + 1, lM + 2);
 
 			if (lM === format.length - 1) {
 				min = time.substring(time.indexOf(prevM, fM - 1) + 1, timeLength);
 			} else if (fM === 0) {
-				min = time.substring(0, time.indexOf(nextM, fM));
+				min = time.substring(0, 2);
 			} else {
-				min = time.substring(time.indexOf(prevM, fM - 1) + 1, time.indexOf(nextM, fM + 1));
+				min = time.substr(fM, 2);
 			}
 
 			// Parse t (am/pm)
-			t = time.substr(fT, 2);
+			if (is24Hour) t = parseInt(hour) > 11 ? (tLength > 1 ? 'PM' : 'pm') : (tLength > 1 ? 'AM' : 'am');
+			else t = time.substr(fT, 2);
 
-			return { hour: parseInt(hour), minute: parseInt(min), t : that.config.lowerCase ? t.toLowerCase() : t.toUpperCase() };
+			var isPm = t.toLowerCase() === 'pm',
+				outTime = new Time(parseInt(hour), parseInt(min));
+
+			if (isPm && parseInt(hour) < 12) outTime.invert();
+
+			return outTime;
 		},
 
 		switchView : function (view) {
@@ -324,14 +362,13 @@
 			var that = this;
 
 			if (that.input.val() === '') {
-				var now = new Date(), h = now.getHours() % 12, m = now.getMinutes(), t = now.getHours() > 12 ? 'PM' : 'AM';
-
-				that.setTime({ hour: h, minute: m, t: t });
+				var time = that.getSystemTime();
+				this.time = new Time(time.hour, time.minute);
 			}
 
 			that.resetSelected();
 
-			$('body').attr('mdtimepicker-display', 'one');
+			$('body').attr('mdtimepicker-display', 'on');
 
 			that.timepicker.wrapper.addClass('animate');
 			that.timepicker.overlay.removeClass('hidden').addClass('animate');
@@ -383,11 +420,10 @@
 	}
 
 	$.fn.mdtimepicker.defaults = {
-		_24Hour: false,				// determines if value format is 24-hour
-		valueFormat: 'hh:mm tt',	// string format of the time value (data-time attribute); different from display value
+		timeFormat: 'hh:mm:ss.000',	// format of the time value (data-time attribute)
+		format: 'h:mm tt',			// format of the input value
 		theme: 'blue',				// theme of the timepicker
 		readOnly: true,				// determines if input is readonly
-		lowerCase: true,			// determines if display value is in lowercase (i.e. 5:30 pm)
-		hPadding: false				// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM)
+		hourPadding: false				// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
 	};
 }(jQuery);

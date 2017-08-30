@@ -7,20 +7,22 @@
  * Date: Tuesday, August 28 2017
  */
  @import url('https://fonts.googleapis.com/css?family=Roboto');
-.mdtp__overlay {
+ 
+ body[mdtimepicker-display='on'] { overflow: hidden; }
+.mdtimepicker {
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	font-family: Roboto;
+	font-family: Roboto, sans-serif;
 	font-size: 14px;
 	background-color: rgba(10,10,10,.7);
 	transition: background-color .28s ease;
 	z-index: 100001;
 }
-	.mdtp__overlay.hidden { display: none; }
-	.mdtp__overlay.animate { background-color: transparent; }
+	.mdtimepicker.hidden { display: none; }
+	.mdtimepicker.animate { background-color: transparent; }
 .mdtp__wrapper {
 	position: absolute;
 	display: flex;
