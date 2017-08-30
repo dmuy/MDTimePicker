@@ -146,7 +146,9 @@
 					hour = $('<div class="mdtp__digit rotate-' + deg + '" data-hour="' + value + '"><span>'+ value +'</span></div>');
 				
 				hour.find('span').click(function () {
-					that.setHour($(this).parent().data('hour'));
+					var value = parseInt($(this).parent().data('hour'));
+
+					that.setHour(that.selected.getT() === 'PM' ? value + 12 : value);
 					that.switchView('minutes');
 				});
 
@@ -232,6 +234,8 @@
 
 		setT : function (value) {
 			if (typeof value === 'undefined') throw new Error('Expecting a value.');
+
+			console.log('T: ' + this.selected.getT() + '; value: ' + value.toUpperCase());
 
 			if (this.selected.getT() !== value.toUpperCase()) this.selected.invert();
 
