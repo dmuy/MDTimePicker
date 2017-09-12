@@ -11,7 +11,7 @@
  if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin requires jQuery'); }
 +function ($) {
 	var MDTP_DATA = "mdtimepicker", HOUR_START_DEG = 120, MIN_START_DEG = 90, END_DEG = 360, HOUR_DEG_INCR = 30, MIN_DEG_INCR = 6,
-		EX_KEYS = [9,112,113,114,115,116,117,118,119,120,121,122,123];
+		EX_KEYS = [9, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123];
 
 	var Time = function (hour, minute) {
 		this.hour = hour;
@@ -39,7 +39,7 @@
 		this.getHour = function (is12Hour) { return is12Hour ? this.hour === 0 || this.hour === 12 ? 12 : (this.hour % 12) : this.hour; };
 		this.invert = function () {
 			if (this.getT() === 'AM') this.setHour(this.getHour() + 12);
-			else if (this.getHour() >= 12) this.setHour(this.getHour() - 12);
+			else this.setHour(this.getHour() - 12);
 		};
 		this.setMinutes = function (value) { this.minute = value; }
 		this.getMinutes = function (value) { return this.minute; }
@@ -87,11 +87,9 @@
 
 		var picker = that.timepicker;
 
-		that.input.on('keydown', function (e) { return !(EX_KEYS.indexOf(e.which) < 0 && that.config.readOnly); });
-
 		that.setup(picker).appendTo('body');
 
-		picker.clockHolder.am.click(function () { if(that.selected.getT() !== 'AM') that.setT('am'); });
+		picker.clockHolder.am.click(function () { if (that.selected.getT() !== 'AM') that.setT('am'); });
 		picker.clockHolder.pm.click(function () { if (that.selected.getT() !== 'PM') that.setT('pm'); });
 		picker.timeHolder.hour.click(function () { if (that.activeView !== 'hours') that.switchView('hours'); });
 		picker.timeHolder.minute.click(function () { if (that.activeView !== 'minutes') that.switchView('minutes'); });
@@ -107,8 +105,11 @@
 		});
 		picker.clockHolder.buttonsHolder.btnCancel.click(function () { that.hide(); });
 
-		that.input.click(function () { that.show(); })
-	        .keydown(function (e) { if (e.keyCode === 13) that.show(); });
+		that.input.on('keydown', function (e) { 
+			if (e.keyCode === 13) that.show();
+			return !(EX_KEYS.indexOf(e.which) < 0 && that.config.readOnly); })
+			.on('click', function () { that.show(); })
+			.prop('readonly', that.config.readOnly);
 
 		if(that.input.val() !== '') {
 			var time = that.parseTime(that.input.val(), that.config.format);
@@ -146,9 +147,11 @@
 					hour = $('<div class="mdtp__digit rotate-' + deg + '" data-hour="' + value + '"><span>'+ value +'</span></div>');
 				
 				hour.find('span').click(function () {
-					var value = parseInt($(this).parent().data('hour'));
+					var _data = parseInt($(this).parent().data('hour')),
+						_selectedT = that.selected.getT(),
+						_value = (_data + (_selectedT === 'PM' || (_selectedT === 'AM' && _data === 12) ? 12 : 0)) % 24;
 
-					that.setHour(that.selected.getT() === 'PM' ? value + 12 : value);
+					that.setHour(_value);
 					that.switchView('minutes');
 				});
 
@@ -234,8 +237,6 @@
 
 		setT : function (value) {
 			if (typeof value === 'undefined') throw new Error('Expecting a value.');
-
-			console.log('T: ' + this.selected.getT() + '; value: ' + value.toUpperCase());
 
 			if (this.selected.getT() !== value.toUpperCase()) this.selected.invert();
 
@@ -428,6 +429,6 @@
 		format: 'h:mm tt',			// format of the input value
 		theme: 'blue',				// theme of the timepicker
 		readOnly: true,				// determines if input is readonly
-		hourPadding: false				// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
+		hourPadding: false			// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
 	};
 }(jQuery);
