@@ -111,7 +111,7 @@
 			.on('click', function () { that.show(); })
 			.prop('readonly', that.config.readOnly);
 
-		if(that.input.val() !== '') {
+		if (that.input.val() !== '') {
 			var time = that.parseTime(that.input.val(), that.config.format);
 
 			that.setValue(time);
@@ -282,7 +282,7 @@
 
 		parseTime : function (time, tFormat) {
 			var that = this, format = typeof tFormat === 'undefined' ? that.config.format : tFormat,
-				hLength = that.config.hourPadding ? 2 : (format.match(/h/g) || []).length,
+                hLength = (format.match(/h/g) || []).length,
 				is24Hour = hLength > 1,
 				mLength = (format.match(/m/g) || []).length, tLength = (format.match(/t/g) || []).length,
 				timeLength = time.length,
@@ -326,8 +326,9 @@
 
 			var isPm = t.toLowerCase() === 'pm',
 				outTime = new Time(parseInt(hour), parseInt(min));
-
-			if (isPm && parseInt(hour) < 12) outTime.invert();
+			if ((isPm && parseInt(hour) < 12) || (!isPm && parseInt(hour) === 12)) {
+			    outTime.invert();
+			}
 
 			return outTime;
 		},
