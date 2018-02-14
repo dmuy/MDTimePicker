@@ -402,6 +402,15 @@
 				that.visible = false;
 				that.input.focus();
 			}, 300);
+		},
+
+		destroy: function () {
+			var that = this;
+
+			that.input.removeData(MDTP_DATA)
+				.unbind('keydown').unbind('click')
+				.removeProp('readonly');
+			that.timepicker.overlay.remove();
 		}
 	};
 
