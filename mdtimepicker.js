@@ -149,7 +149,7 @@
 				hour.find('span').click(function () {
 					var _data = parseInt($(this).parent().data('hour')),
 						_selectedT = that.selected.getT(),
-						_value = (_data + (_selectedT === 'PM' || (_selectedT === 'AM' && _data === 12) ? 12 : 0)) % 24;
+						_value = (_data + ((_selectedT === 'PM' && _data < 12) || (_selectedT === 'AM' && _data === 12) ? 12 : 0)) % 24;
 
 					that.setHour(_value);
 					that.switchView('minutes');
