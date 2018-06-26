@@ -419,7 +419,7 @@
 			var that = this,
 				$that = $(this),
 				picker = $(this).data(MDTP_DATA);
-				options = $.extend({}, $.fn.mdtimepicker.defaults, $that.data(), typeof config === 'object' && config);
+				var options = $.extend({}, $.fn.mdtimepicker.defaults, $that.data(), typeof config === 'object' && config);
 
 			if (!picker) {
 				$that.data(MDTP_DATA, (picker = new MDTimePicker(that, options)));
