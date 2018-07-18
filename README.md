@@ -28,6 +28,12 @@ Then add this piece of code in your `script` tag:
 </script>
 ```
 
+### Remember
+Comment or remove the line shown below in the css file if you already have a link to the Roboto font.
+```css
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+```
+
 ## Options
 Default time picker configurations.
 ```javascript
