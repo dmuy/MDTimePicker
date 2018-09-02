@@ -99,7 +99,8 @@
 			var formatted = that.getFormattedTime();
 
 			that.input.trigger($.Event('timechanged', { time: formatted.time, value: formatted.value }))
-				.trigger('onchange');	// for ASP.Net postback
+				.trigger('onchange')	// for ASP.Net postback
+				.trigger('change');
 				
 			that.hide();
 		});
