@@ -30,6 +30,19 @@ Then add this piece of code in your `script` tag:
 </script>
 ```
 
+### CDN
+Use the following if you don't want to host the `js` and `css` files:
+
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.js
+
+Minified version:
+
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.min.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.min.css
+
+[Learn more about the CDN](https://www.jsdelivr.com/features#gh)
+
 ### Remember
 Comment or remove the line shown below in the css file if you already have a link to the Roboto font.
 ```css
