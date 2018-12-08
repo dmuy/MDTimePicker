@@ -33,13 +33,13 @@ Then add this piece of code in your `script` tag:
 ### CDN
 Use the following if you don't want to host the `js` and `css` files:
 ```
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.css
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.js
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.js
 ```
 Minified version:
 ```
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.min.css
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@1.0/mdtimepicker.min.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.min.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.min.css
 ```
 
 [Learn more about the CDN](https://www.jsdelivr.com/features#gh)
