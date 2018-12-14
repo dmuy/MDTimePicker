@@ -1,0 +1,36 @@
+---
+title: dmuy - MDTimePicker
+layout: default
+---
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.min.css">
+<style type="text/css">
+</style>
+<h2>Demo</h2>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <p>24-hour format</p><input type="text" value="00:00" id="picker1"></div>
+        <div class="col">
+            <p>12-hour format with AM/PM indicator</p><input type="text" value="12:00 AM" id="picker2"></div>
+    </div>
+</div>
+<br>
+
+{% capture docu_file %}{% include_relative README.md %}{% endcapture %}
+{{ docu_file | markdownify }}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+        $('#picker1').mdtimepicker({ format: 'hh:mm' }).data('mdtimepicker');
+        
+        $('#picker2').mdtimepicker({ readOnly: false, hourPadding: true, theme: 'dark', color: 'red' })
+            .on('timechanged', function (e) {
+                alert(e.time);
+                alert(e.value);
+        });
+    });
+</script>
