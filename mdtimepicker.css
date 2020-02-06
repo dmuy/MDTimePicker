@@ -6,7 +6,7 @@
  *
  * Date: Tuesday, August 28 2017
  */
- @import url('https://fonts.googleapis.com/css?family=Roboto');
+ @import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
  
  body[mdtimepicker-display='on'] { overflow: hidden; }
 .mdtimepicker {
@@ -32,7 +32,7 @@
 	min-width: 280px;
 	opacity: 1;
 	user-select: none;
-	border-radius: 2px;
+	border-radius: 4px;
 	transform: translateX(-50%) scale(1);
 	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 	transition: transform .28s ease, opacity .28s ease;
@@ -259,8 +259,11 @@
 	font-weight: 500;
 	cursor: pointer;
 	color: #1565c0;
+	border-radius: 4px;
+	transition: background-color .2s;
 }
-.mdtp__button:hover { background-color: #e0e0e0; }
+.mdtp__button:hover { background-color: rgba(0,0,0,.1); }
+.mdtp__button:active { background-color: rgba(0,0,0,.2); }
 
 /* Color themes */
 .mdtp__wrapper[data-theme='blue'] .mdtp__time_holder { background-color: #1565c0; }
@@ -316,6 +319,16 @@
 .mdtp__wrapper[data-theme='green'] .mdtp__clock .mdtp__digit span:hover { background-color: #2e7d32 !important; }
 .mdtp__wrapper[data-theme='green'] .mdtp__digit.active:before { background-color: #2e7d32; }
 .mdtp__wrapper[data-theme='green'] .mdtp__button { color: #2e7d32; }
+
+.mdtp__wrapper[data-theme='dark'] .mdtp__time_holder { background-color: #121212; }
+.mdtp__wrapper[data-theme='dark'] .mdtp__clock_holder { background-color: rgb(29,29,29); }
+.mdtp__wrapper[data-theme='dark'] .mdtp__clock_holder .mdtp__clock { background-color: rgb(24,24,24); }
+.mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__digit { color: rgba(255,255,255,.87); }
+.mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__am:not(.active), 
+.mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__pm:not(.active) {
+	color: rgba(255,255,255,.87);
+	background-color: rgba(200,200,200,.05);
+}
 
 @media (max-height: 360px) {
 	.mdtp__wrapper {
