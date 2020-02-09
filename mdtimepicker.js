@@ -79,6 +79,7 @@
 				},
 				buttonsHolder : {
 					wrapper: $('<div class="mdtp__buttons">'),
+					btnClear : $('<span class="mdtp__button clear-btn">Clear</span>'),
 					btnOk : $('<span class="mdtp__button ok">Ok</span>'),
 					btnCancel: $('<span class="mdtp__button cancel">Cancel</span>')
 				}
@@ -98,13 +99,24 @@
 
 			var formatted = _.getFormattedTime();
 
-			_.input.trigger($.Event('timechanged', { time: formatted.time, value: formatted.value }))
-				.trigger('onchange')	// for ASP.Net postback
-				.trigger('change');
-				
+			// _.input.trigger($.Event('timechanged', { time: formatted.time, value: formatted.value }))
+			// 	.trigger('onchange')	// for ASP.Net postback
+			// 	.trigger('change');
+			_.triggerChange({ time: formatted.time, value: formatted.value });
 			_.hide();
 		});
 		picker.clockHolder.buttonsHolder.btnCancel.click(function () { _.hide(); });
+
+		if (_.config.clearBtn) {
+			picker.clockHolder.buttonsHolder.btnClear.click(function () {
+				_.input.val('')
+					.attr('data-time', null)
+					.attr('value', '');
+
+				_.triggerChange({ time: null, value: '' });					
+				_.hide();
+			});
+		}
 
 		_.input.on('keydown', function (e) { 
 			if (e.keyCode === 13) _.show();
@@ -183,6 +195,10 @@
 				.appendTo(clock.wrapper);
 
 			// Setup buttons
+			if (_.config.clearBtn) {
+				clock.buttonsHolder.wrapper.append(clock.buttonsHolder.btnClear);
+			}
+
 			clock.buttonsHolder.wrapper.append(clock.buttonsHolder.btnCancel)
 				.append(clock.buttonsHolder.btnOk)
 				.appendTo(clock.wrapper);
@@ -401,6 +417,12 @@
 				.unbind('keydown').unbind('click')
 				.removeProp('readonly');
 			that.timepicker.overlay.remove();
+		},
+
+		triggerChange: function (evtObj) {
+			this.input.trigger($.Event('timechanged', evtObj))
+				.trigger('onchange')	// for ASP.Net postback
+				.trigger('change');
 		}
 	};
 
@@ -429,6 +451,7 @@
 		format: 'h:mm tt',			// format of the input value
 		theme: 'blue',				// theme of the timepicker
 		readOnly: true,				// determines if input is readonly
-		hourPadding: false			// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
+		hourPadding: false,			// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
+		clearBtn: false             // determines if clear button is visible
 	};
 }(jQuery);

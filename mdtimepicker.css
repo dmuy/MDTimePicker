@@ -17,7 +17,7 @@
 	bottom: 0;
 	font-family: Roboto, sans-serif;
 	font-size: 14px;
-	background-color: rgba(10,10,10,.7);
+	background-color: rgba(10,10,10,.65);
 	transition: background-color .28s ease;
 	z-index: 100001;
 }
@@ -66,14 +66,15 @@
 	.mdtp__time_holder .mdtp__ampm { font-size: 18px; }
 .mdtp__clock_holder {
 	position: relative;
-	padding: 20px;
+	/*padding: 20px 20px 10px;*/
 	background-color: #fff;
 }
 .mdtp__clock_holder .mdtp__clock {
 	position: relative;
 	width: 250px;
 	height: 250px;
-	margin-bottom: 20px;
+	/*margin-bottom: 20px;*/
+	margin: 20px;
 	border-radius: 50%;
 	background-color: #eee;
 }
@@ -246,13 +247,19 @@
 .mdtp__digit.rotate-360 { transform: rotate(360deg); } .mdtp__digit.rotate-360 span { transform: rotate(-360deg); }
 
 .mdtp__buttons {
-	margin: 0 -10px -10px;
+	/*margin: 0 -10px -10px;*/
+	padding: 0 10px 10px;
 	text-align: right;
 }
+	.mdtp__buttons:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
 .mdtp__button {
 	display: inline-block;
 	padding: 0 16px;
-	min-width: 50px;
+	min-width: 40px;
 	text-align: center;
 	text-transform: uppercase;
 	line-height: 32px;
@@ -260,10 +267,14 @@
 	cursor: pointer;
 	color: #1565c0;
 	border-radius: 4px;
-	transition: background-color .2s;
+	transition: background-color .2s linear;
 }
 .mdtp__button:hover { background-color: rgba(0,0,0,.1); }
 .mdtp__button:active { background-color: rgba(0,0,0,.2); }
+.mdtp__button.clear-btn {
+	float: left;
+	color: #ef5350 !important;
+}
 
 /* Color themes */
 .mdtp__wrapper[data-theme='blue'] .mdtp__time_holder { background-color: #1565c0; }
@@ -329,6 +340,9 @@
 	color: rgba(255,255,255,.87);
 	background-color: rgba(200,200,200,.05);
 }
+.mdtp__wrapper[data-theme='dark'] .mdtp__button { color: #42a5f5;  }
+.mdtp__wrapper[data-theme='dark'] .mdtp__button:hover { background-color: rgba(255,255,255,.04); }
+.mdtp__wrapper[data-theme='dark'] .mdtp__button:active { background-color: rgba(255,255,255,.1); }
 
 @media (max-height: 360px) {
 	.mdtp__wrapper {
