@@ -99,9 +99,6 @@
 
 			var formatted = _.getFormattedTime();
 
-			// _.input.trigger($.Event('timechanged', { time: formatted.time, value: formatted.value }))
-			// 	.trigger('onchange')	// for ASP.Net postback
-			// 	.trigger('change');
 			_.triggerChange({ time: formatted.time, value: formatted.value });
 			_.hide();
 		});
@@ -426,17 +423,22 @@
 		}
 	};
 
-	$.fn.mdtimepicker = function (config) {
+	$.fn.mdtimepicker = function () {
+		var mdtp_args = arguments, 
+			arg0 = mdtp_args[0];
+
 		return $(this).each(function (idx, el) {
 			var that = this,
 				$that = $(this),
 				picker = $(this).data(MDTP_DATA);
-				options = $.extend({}, $.fn.mdtimepicker.defaults, $that.data(), typeof config === 'object' && config);
+				options = $.extend({}, $.fn.mdtimepicker.defaults, $that.data(), typeof arg0 === 'object' && arg0);
 
 			if (!picker) {
 				$that.data(MDTP_DATA, (picker = new MDTimePicker(that, options)));
 			}
-			if(typeof config === 'string') picker[config]();
+
+			if(typeof arg0 === 'string')
+				picker[arg0].apply(picker, Array.prototype.slice.call(mdtp_args).slice(1));
 
 			$(document).on('keydown', function (e) {
 				if(e.keyCode !== 27) return;
