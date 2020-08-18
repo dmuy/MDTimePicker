@@ -95,9 +95,18 @@ Or specify `minTime` and/or `maxTime` in the initialization configurations as sh
 
 ### Usable built-in methods
 Below are some built-in methods you can use (assuming the time picker is already initialized).
+
 `setValue` - Sets the (selected) value
 ```javascript
 $('#timepicker').mdtimepicker('setValue', '3:00 PM');
+```
+`setMinTime` - Sets the minimum time selectable
+```javascript
+$('#timepicker').mdtimepicker('setMinTime', '1:00 PM');
+```
+`setMaxTime` - Sets the maximum time selectable
+```javascript
+$('#timepicker').mdtimepicker('setMaxTime', 'now');
 ```
 `show` - Programmatically shows the time picker
 ```javascript
