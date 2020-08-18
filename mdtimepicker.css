@@ -66,14 +66,12 @@
 	.mdtp__time_holder .mdtp__ampm { font-size: 18px; }
 .mdtp__clock_holder {
 	position: relative;
-	/*padding: 20px 20px 10px;*/
 	background-color: #fff;
 }
 .mdtp__clock_holder .mdtp__clock {
 	position: relative;
 	width: 250px;
 	height: 250px;
-	/*margin-bottom: 20px;*/
 	margin: 20px;
 	border-radius: 50%;
 	background-color: #eee;
@@ -150,11 +148,17 @@
 		transition: background-color .28s, color .14s;
 	}
 		.mdtp__digit.active span,
-		.mdtp__clock .mdtp__digit span:hover {
+		.mdtp__clock .mdtp__digit:not(.digit--disabled) span:hover {
 			background-color: #1565c0 !important;
 			color: #fff;
 			z-index: 2;
 		}
+		.mdtp__digit.digit--disabled span {
+			color: rgb(200,200,200);
+			cursor: not-allowed;
+			background-color: transparent !important;
+		}
+
 .mdtp__digit.active:before {
 	content: '';
 	display: block;
@@ -247,7 +251,6 @@
 .mdtp__digit.rotate-360 { transform: rotate(360deg); } .mdtp__digit.rotate-360 span { transform: rotate(-360deg); }
 
 .mdtp__buttons {
-	/*margin: 0 -10px -10px;*/
 	padding: 0 10px 10px;
 	text-align: right;
 }
@@ -282,7 +285,7 @@
 .mdtp__wrapper[data-theme='blue'] .mdtp__clock .mdtp__pm.active { background-color: #1565c0; }
 .mdtp__wrapper[data-theme='blue'] .mdtp__clock .mdtp__clock_dot { background-color: #1565c0; }
 .mdtp__wrapper[data-theme='blue'] .mdtp__digit.active span,
-.mdtp__wrapper[data-theme='blue'] .mdtp__clock .mdtp__digit span:hover { background-color: #1565c0 !important; }
+.mdtp__wrapper[data-theme='blue'] .mdtp__clock .mdtp__digit:not(.digit--disabled) span:hover { background-color: #1565c0 !important; }
 .mdtp__wrapper[data-theme='blue'] .mdtp__digit.active:before { background-color: #1565c0; }
 .mdtp__wrapper[data-theme='blue'] .mdtp__button { color: #1565c0; }
 
@@ -291,7 +294,7 @@
 .mdtp__wrapper[data-theme='red'] .mdtp__clock .mdtp__pm.active { background-color: #c62828; }
 .mdtp__wrapper[data-theme='red'] .mdtp__clock .mdtp__clock_dot { background-color: #c62828; }
 .mdtp__wrapper[data-theme='red'] .mdtp__digit.active span,
-.mdtp__wrapper[data-theme='red'] .mdtp__clock .mdtp__digit span:hover { background-color: #c62828 !important; }
+.mdtp__wrapper[data-theme='red'] .mdtp__clock .mdtp__digit:not(.digit--disabled) span:hover { background-color: #c62828 !important; }
 .mdtp__wrapper[data-theme='red'] .mdtp__digit.active:before { background-color: #c62828; }
 .mdtp__wrapper[data-theme='red'] .mdtp__button { color: #c62828; }
 
@@ -300,7 +303,7 @@
 .mdtp__wrapper[data-theme='purple'] .mdtp__clock .mdtp__pm.active { background-color: #6a1b9a; }
 .mdtp__wrapper[data-theme='purple'] .mdtp__clock .mdtp__clock_dot { background-color: #6a1b9a; }
 .mdtp__wrapper[data-theme='purple'] .mdtp__digit.active span,
-.mdtp__wrapper[data-theme='purple'] .mdtp__clock .mdtp__digit span:hover { background-color: #6a1b9a !important; }
+.mdtp__wrapper[data-theme='purple'] .mdtp__clock .mdtp__digit:not(.digit--disabled) span:hover { background-color: #6a1b9a !important; }
 .mdtp__wrapper[data-theme='purple'] .mdtp__digit.active:before { background-color: #6a1b9a; }
 .mdtp__wrapper[data-theme='purple'] .mdtp__button { color: #6a1b9a; }
 
@@ -309,7 +312,7 @@
 .mdtp__wrapper[data-theme='indigo'] .mdtp__clock .mdtp__pm.active { background-color: #283593; }
 .mdtp__wrapper[data-theme='indigo'] .mdtp__clock .mdtp__clock_dot { background-color: #283593; }
 .mdtp__wrapper[data-theme='indigo'] .mdtp__digit.active span,
-.mdtp__wrapper[data-theme='indigo'] .mdtp__clock .mdtp__digit span:hover { background-color: #283593 !important; }
+.mdtp__wrapper[data-theme='indigo'] .mdtp__clock .mdtp__digit:not(.digit--disabled) span:hover { background-color: #283593 !important; }
 .mdtp__wrapper[data-theme='indigo'] .mdtp__digit.active:before { background-color: #283593; }
 .mdtp__wrapper[data-theme='indigo'] .mdtp__button { color: #283593; }
 
@@ -318,7 +321,7 @@
 .mdtp__wrapper[data-theme='teal'] .mdtp__clock .mdtp__pm.active { background-color: #00695c; }
 .mdtp__wrapper[data-theme='teal'] .mdtp__clock .mdtp__clock_dot { background-color: #00695c; }
 .mdtp__wrapper[data-theme='teal'] .mdtp__digit.active span,
-.mdtp__wrapper[data-theme='teal'] .mdtp__clock .mdtp__digit span:hover { background-color: #00695c !important; }
+.mdtp__wrapper[data-theme='teal'] .mdtp__clock .mdtp__digit:not(.digit--disabled) span:hover { background-color: #00695c !important; }
 .mdtp__wrapper[data-theme='teal'] .mdtp__digit.active:before { background-color: #00695c; }
 .mdtp__wrapper[data-theme='teal'] .mdtp__button { color: #00695c; }
 
@@ -327,14 +330,15 @@
 .mdtp__wrapper[data-theme='green'] .mdtp__clock .mdtp__pm.active { background-color: #2e7d32; }
 .mdtp__wrapper[data-theme='green'] .mdtp__clock .mdtp__clock_dot { background-color: #2e7d32; }
 .mdtp__wrapper[data-theme='green'] .mdtp__digit.active span,
-.mdtp__wrapper[data-theme='green'] .mdtp__clock .mdtp__digit span:hover { background-color: #2e7d32 !important; }
+.mdtp__wrapper[data-theme='green'] .mdtp__clock .mdtp__digit:not(.digit--disabled) span:hover { background-color: #2e7d32 !important; }
 .mdtp__wrapper[data-theme='green'] .mdtp__digit.active:before { background-color: #2e7d32; }
 .mdtp__wrapper[data-theme='green'] .mdtp__button { color: #2e7d32; }
 
 .mdtp__wrapper[data-theme='dark'] .mdtp__time_holder { background-color: #121212; }
 .mdtp__wrapper[data-theme='dark'] .mdtp__clock_holder { background-color: rgb(29,29,29); }
 .mdtp__wrapper[data-theme='dark'] .mdtp__clock_holder .mdtp__clock { background-color: rgb(24,24,24); }
-.mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__digit { color: rgba(255,255,255,.87); }
+.mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__digit:not(.digit--disabled) { color: rgba(255,255,255,.87); }
+.mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__digit.digit--disabled span { color: rgba(100,100,100,.87); }
 .mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__am:not(.active), 
 .mdtp__wrapper[data-theme='dark'] .mdtp__clock .mdtp__pm:not(.active) {
 	color: rgba(255,255,255,.87);
