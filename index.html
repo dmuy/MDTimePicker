@@ -4,16 +4,36 @@ layout: default
 ---
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@v1.0.2-rc/mdtimepicker.min.css">
 <style type="text/css">
 </style>
 <h2>Demo</h2>
 <div class="container">
     <div class="row">
         <div class="col">
-            <p>24-hour format</p><input type="text" value="00:00" id="picker1"></div>
+            <p>Default</p>
+            <div class="input-group"><input class="form-control" type="text" placeholder="click me" id="picker1"></div>
+            <br>
+            <p>Default (with hour padding)</p>
+            <div class="input-group"><input class="form-control" type="text" placeholder="click me" value="12:00 AM" id="picker2"></div>
+            <br>
+        </div>
         <div class="col">
-            <p>12-hour format with AM/PM indicator</p><input type="text" value="12:00 AM" id="picker2"></div>
+            <p>24-hour format</p>
+            <div class="input-group"><input class="form-control" type="text" placeholder="click me" value="00:00" id="picker3"></div>
+            <br>
+            <p>Dark theme</p>
+            <div class="input-group"><input class="form-control" type="text" placeholder="click me" id="picker4" data-theme="dark"></div>
+            <br>
+        </div>
+        <div class="col">
+            <p>Minimum time (now)</p>
+            <div class="input-group"><input class="form-control" type="text" placeholder="click me" id="picker5" data-mintime="now"></div>
+            <br>
+            <p>Maximum time (3:00 PM)</p>
+            <div class="input-group"><input class="form-control" type="text" placeholder="click me" id="picker6" data-maxtime="3:00 PM"></div>
+            <br>
+        </div>
     </div>
 </div>
 <br>
@@ -22,15 +42,14 @@ layout: default
 {{ docu_file | markdownify }}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker/mdtimepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@v1.0.2-rc/mdtimepicker.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-        $('#picker1').mdtimepicker({ format: 'hh:mm' }).data('mdtimepicker');
-        
-        $('#picker2').mdtimepicker({ readOnly: false, hourPadding: true, theme: 'dark', color: 'red' })
+        $('#picker1, #picker4, #picker5, #picker6').mdtimepicker();
+        $('#picker2').mdtimepicker({ readOnly: false, hourPadding: true })
             .on('timechanged', function (e) {
-                alert(e.time);
-                alert(e.value);
+                console.log(e.time, e.value);
         });
+        $('#picker3').mdtimepicker({ format: 'hh:mm' });
     });
 </script>
