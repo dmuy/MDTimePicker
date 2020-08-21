@@ -5,8 +5,9 @@ Material concept time picker jquery plugin.
 
 **[DEMO](https://dmuy.github.io/MDTimePicker/)**
 
-![alt text](https://i.imgur.com/4LyivoZ.png "TimePicker: Hour")
-![alt text](https://i.imgur.com/BACEvsl.png "TimePicker: Minute")
+![alt text](https://i.imgur.com/M7Jb5H3.png "TimePicker: Hour")
+![alt text](https://i.imgur.com/LmIkHoU.png "TimePicker: Minute")
+![alt text](https://i.imgur.com/EUZoPeI.png "TimePicker: Dark")
 
 ## Options
 Default time picker configurations.
@@ -60,15 +61,15 @@ Then add this piece of code in your `script` tag:
 ### CDN
 Use the following if you don't want to host the `js` and `css` files:
 ```
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@[version]/mdtimepicker.css
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@[version]/mdtimepicker.js
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.js
 ```
 Minified version:
 ```
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@[version]/mdtimepicker.min.css
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@[version]/mdtimepicker.min.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.min.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.min.css
 ```
-***Note: Replace `[version]` with the version you want to use.***
+***Note: Replace `{version}` with the version you want to use.***
 
 [Learn more about the CDN](https://www.jsdelivr.com/features#gh)
 
