@@ -1,15 +1,24 @@
 /* -- DO NOT REMOVE --
- * jQuery MDTimePicker v1.0 plugin
+ * jQuery MDTimePicker v1.0.2 plugin
+ * https://github.com/dmuy/MDTimePicker
  * 
  * Author: Dionlee Uy
  * Email: dionleeuy@gmail.com
  *
- * Date: Tuesday, August 28 2017
- *
  * @requires jQuery
- * -- DO NOT REMOVE -- */
-if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin requires jQuery'); }
-+function ($) {
+ * -- DO NOT REMOVE -- 
+ */
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory(require('jquery'));;
+	} else {
+		factory(jQuery);
+	}
+})(function ($) {
+	if (typeof $ === 'undefined') { throw new Error('MDTimePicker: This plugin requires jQuery'); }
+
 	var MDTP_DATA = "mdtimepicker", HOUR_START_DEG = 120, MIN_START_DEG = 90, END_DEG = 360, HOUR_DEG_INCR = 30, MIN_DEG_INCR = 6,
 		EX_KEYS = [9, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123];
 
@@ -69,7 +78,7 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 		this.selected = new Time(0, 0);
 		this.timepicker = {
 			overlay: $('<div class="mdtimepicker hidden"></div>'),
-			wrapper: $('<div class="mdtp__wrapper"></div>'),
+			wrapper: $('<div class="mdtp__wrapper" tabindex="0"></div>'),
 			timeHolder: {
 				wrapper: $('<section class="mdtp__time_holder"></section>'),
 				hour: $('<span class="mdtp__time_h">12</span>'),
@@ -103,8 +112,13 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 
 		_.setup().appendTo('body');
 
-		picker.overlay.click(function(e) { _.hide(); });
-		picker.wrapper.click(function(e) { e.stopPropagation() });
+		picker.overlay.click(function () { _.hide(); });
+		picker.wrapper.click(function (e) { e.stopPropagation() })
+			.on('keydown', function (e) {
+				if (e.keyCode !== 27) return;
+
+				_.hide();
+			});
 		picker.clockHolder.am.click(function () { if (_.selected.getPeriod() !== 'AM') _.setPeriod('am'); });
 		picker.clockHolder.pm.click(function () { if (_.selected.getPeriod() !== 'PM') _.setPeriod('pm'); });
 		picker.timeHolder.hour.click(function () { if (_.activeView !== 'hours') _.switchView('hours'); });
@@ -138,7 +152,7 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 			if (e.keyCode === 13) _.show();
 			return !(EX_KEYS.indexOf(e.which) < 0 && _.config.readOnly);
 		}).on('click', function () { _.show(); })
-		.prop('readonly', true);
+			.prop('readonly', true);
 
 		if (_.input.val() !== '') {
 			var time = _.parseTime(_.input.val(), _.config.format);
@@ -168,18 +182,24 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 			time.wrapper.append(time.hour)
 				.append(time.dots)
 				.append(time.minute)
-				.append(time.am_pm)
 				.appendTo(wrapper);
 
+			if (!_.config.is24hour) time.wrapper.append(time.am_pm);
+
 			// Setup hours
-			for (var i = 0; i < 12; i++) {
-				var value = i + 1, deg = (HOUR_START_DEG + (i * HOUR_DEG_INCR)) % END_DEG,
-					hour = $('<div class="mdtp__digit rotate-' + deg + '" data-hour="' + value + '"><span>' + value + '</span></div>');
+			var _hours = _.config.is24hour ? 24 : 12;
+			for (var i = 0; i < _hours; i++) {
+				var value = i + 1, deg = ((HOUR_START_DEG + (i * HOUR_DEG_INCR)) % END_DEG) - (_.config.is24hour && value < 13 ? 15 : 0),
+					is24 = value === 24,
+					hour = $('<div class="mdtp__digit rotate-' + deg + '" data-hour="' + (is24 ? 0 : value) + '"><span>' + (is24 ? '00' : value) + '</span></div>');
+
+				if (_.config.is24hour && value < 13) hour.addClass('inner--digit');
 
 				hour.find('span').click(function () {
 					var _hour = parseInt($(this).parent().data('hour')),
 						_selectedT = _.selected.getPeriod(),
-						_value = (_hour + ((_selectedT === 'PM' && _hour < 12) || (_selectedT === 'AM' && _hour === 12) ? 12 : 0)) % 24,
+						_value = _.config.is24hour ? _hour :
+							(_hour + ((_selectedT === 'PM' && _hour < 12) || (_selectedT === 'AM' && _hour === 12) ? 12 : 0)) % 24,
 						disabled = _.isDisabled(_value, 0);
 
 					if (disabled) return;
@@ -213,8 +233,8 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 			}
 
 			// Setup clock
+			if (!_.config.is24hour) clock.clock.wrapper.append(clock.am).append(clock.pm)
 			clock.clock.wrapper
-				.append(clock.am).append(clock.pm)
 				.append(clock.clock.dot)
 				.append(clock.clock.hours)
 				.append(clock.clock.minutes)
@@ -246,15 +266,17 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 		setHour: function (hour) {
 			if (typeof hour === 'undefined') throw new Error('Expecting a value.');
 
-			var that = this;
+			var that = this, is12Hour = !that.config.is24hour
 
 			this.selected.setHour(hour);
-			this.timepicker.timeHolder.hour.text(this.selected.getHour(true));
+
+			var _selectedH = this.selected.getHour(is12Hour);
+			this.timepicker.timeHolder.hour.text(is12Hour ? _selectedH : this.selected.format('hh'));
 
 			this.timepicker.clockHolder.clock.hours.children('div').each(function (idx, div) {
 				var el = $(div), val = el.data('hour');
 
-				el[val === that.selected.getHour(true) ? 'addClass' : 'removeClass']('active');
+				el[val === _selectedH ? 'addClass' : 'removeClass']('active');
 			});
 		},
 
@@ -315,30 +337,30 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 		 * Sets the minimum time constraint
 		 * @param {string} time Minimum time value
 		 */
-		setMinTime: function(time) { this.minTime = time },
+		setMinTime: function (time) { this.minTime = time },
 
 		/**
 		 * Sets the maximum time constraint
 		 * @param {string} time Maximum time value
 		 */
-		setMaxTime: function(time) { this.maxTime = time },
+		setMaxTime: function (time) { this.maxTime = time },
 
 		/**
 		 * Sets the disabled digits of the clock
 		 * @param {string} view View name
 		 */
-		setDisabled: function(view) {
+		setDisabled: function (view) {
 			if (view !== 'hours' && view !== 'minutes') return;
 
 			var _ = this, clock = this.timepicker.clockHolder.clock;
 
 			if (view === 'hours') {
-				clock.hours.find('.mdtp__digit').each(function(i, hEl) {
+				clock.hours.find('.mdtp__digit').each(function (i, hEl) {
 					var hour = $(hEl), value = parseInt(hour.data('hour')),
 						period = _.selected.getPeriod(),
 						time = new Time(value, 0);
-					
-					if (period !== time.getPeriod()) time.invert();
+
+					if (!_.config.is24hour && period !== time.getPeriod()) time.invert();
 
 					var disabled = _.isDisabled(time.getHour(), 0);
 
@@ -347,7 +369,7 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 			}
 
 			if (view === 'minutes') {
-				clock.minutes.find('.mdtp__digit').each(function(i, mEl) {
+				clock.minutes.find('.mdtp__digit').each(function (i, mEl) {
 					var minute = $(mEl), value = parseInt(minute.data('minute')),
 						hour = _.selected.getHour(),
 						disabled = _.isDisabled(hour, value);
@@ -362,21 +384,21 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 		 * @param {number} hour Hour value
 		 * @param {number} minute Minute value
 		 */
-		isDisabled: function(hour, minute) {
+		isDisabled: function (hour, minute) {
 			var _ = this, minT = null, min = null, maxT = null, max = null, now = new Date(),
 				time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0, 0),
 				hourView = _.activeView === 'hours';
 
-			if (_.minTime) minT = _.minTime === 'now' ? _.getSystemTime()  : _.parseTime(_.minTime);
-			if (_.maxTime) maxT = _.maxTime === 'now' ? _.getSystemTime()  : _.parseTime(_.maxTime);
+			if (_.minTime) minT = _.minTime === 'now' ? _.getSystemTime() : _.parseTime(_.minTime);
+			if (_.maxTime) maxT = _.maxTime === 'now' ? _.getSystemTime() : _.parseTime(_.maxTime);
 
 			if (minT) {
-				min = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 
+				min = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
 					minT.getHour(), hourView ? 0 : minT.getMinutes(), 0, 0)
 			}
 
 			if (maxT) {
-				max = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 
+				max = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
 					maxT.getHour(), hourView ? 0 : maxT.getMinutes(), 0, 0)
 			}
 
@@ -524,7 +546,8 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 			that.timepicker.overlay.removeClass('hidden').addClass('animate');
 			setTimeout(function () {
 				that.timepicker.overlay.removeClass('animate');
-				that.timepicker.wrapper.removeClass('animate');
+				that.timepicker.wrapper.removeClass('animate')
+					.focus();
 
 				that.visible = true;
 				that.input.blur();
@@ -576,13 +599,16 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 
 	$.fn.mdtimepicker = function () {
 		var mdtp_args = arguments,
-			arg0 = mdtp_args[0];
+			arg0 = mdtp_args[0],
+			_defaults = $.extend({}, $.fn.mdtimepicker.defaults);
+
+		if (typeof arg0 === 'object' && arg0.is24hour) _defaults.format = 'hh:mm';
 
 		return $(this).each(function (idx, el) {
 			var that = this,
 				$that = $(this),
 				picker = $(this).data(MDTP_DATA),
-				options = $.extend({}, $.fn.mdtimepicker.defaults, $that.data(), typeof arg0 === 'object' && arg0);
+				options = $.extend({}, _defaults, $that.data(), typeof arg0 === 'object' && arg0);
 
 			if (!picker) {
 				$that.data(MDTP_DATA, (picker = new MDTimePicker(that, options)));
@@ -590,12 +616,6 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 
 			if (typeof arg0 === 'string')
 				picker[arg0].apply(picker, Array.prototype.slice.call(mdtp_args).slice(1));
-
-			$(document).on('keydown', function (e) {
-				if (e.keyCode !== 27) return;
-
-				if (picker.visible) picker.hide();
-			});
 		});
 	}
 
@@ -604,6 +624,7 @@ if (typeof jQuery === 'undefined') { throw new Error('MDTimePicker: This plugin 
 		format: 'h:mm tt',			// format of the input value
 		theme: 'blue',				// theme of the timepicker
 		hourPadding: false,			// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
-		clearBtn: false             // determines if clear button is visible
+		clearBtn: false,            // determines if clear button is visible
+		is24hour: false             // determines if the clock will use 24-hour format in the UI
 	};
-}(jQuery);
+});
