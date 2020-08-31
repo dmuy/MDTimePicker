@@ -3,10 +3,11 @@ Default time picker configurations.
 ```javascript
 {
     timeFormat: 'hh:mm:ss.000', // format of the time value (data-time attribute)
-    format: 'h:mm tt',    // format of the input value
-    theme: 'blue',        // theme of the timepicker
-    hourPadding: false,   // determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
-    clearBtn: false       // determines if clear button is visible
+    format: 'h:mm tt',          // format of the input value
+    theme: 'blue',              // theme of the timepicker
+    hourPadding: false,         // determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
+    clearBtn: false,            // determines if clear button is visible
+    is24hour: false             // determines if the clock will use 24-hour format in the UI; format config will be forced to `hh:mm` if not specified
 }
 ```
 
@@ -24,6 +25,7 @@ The default value of the `format` option is `h:mm tt`. You can specify the forma
 ```javascript
 $('#timepicker').mdtimepicker({format: 'hh:mm'}); //Initializes the time picker and uses the specified format (i.e. 23:30)
 ```
+***Note: If `is24hour` configuration is set to `true`, `format` default will be `hh:mm`.***
 
 ## How to use
 Make sure you include the jQuery library first.

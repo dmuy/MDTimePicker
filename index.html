@@ -4,7 +4,7 @@ layout: default
 ---
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@v1.0.2-rc/mdtimepicker.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@v1.0.2-rc2/mdtimepicker.min.css">
 <style type="text/css">
 </style>
 <h2>Demo</h2>
@@ -42,7 +42,7 @@ layout: default
 {{ docu_file | markdownify }}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@v1.0.2-rc/mdtimepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@v1.0.2-rc2/mdtimepicker.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
         $('#picker1, #picker4, #picker5, #picker6').mdtimepicker();
@@ -50,6 +50,6 @@ layout: default
             .on('timechanged', function (e) {
                 console.log(e.time, e.value);
         });
-        $('#picker3').mdtimepicker({ format: 'hh:mm' });
+        $('#picker3').mdtimepicker({ is24hour: true });
     });
 </script>
