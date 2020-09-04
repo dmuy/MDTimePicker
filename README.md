@@ -10,6 +10,42 @@ Material concept time picker jquery plugin.
 ![alt text](https://i.imgur.com/WyS2aHd.png "TimePicker: Dark")
 ![alt text](https://i.imgur.com/kNqqKMZ.png "TimePicker: 24-hour mode")
 
+## Installation
+### NPM
+Install via npm:
+```
+npm i @dmuy/jquery-timepicker
+```
+
+Include in your app
+```javascript
+import '@dmuy/jquery-timepicker/mdtimepicker.css'
+import mdtimepicker from '@dmuy/jquery-timepicker'
+```
+
+### CDN
+Use the following if you don't want to host the `js` and `css` files:
+```
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.js
+```
+Minified version:
+```
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.min.css
+https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.min.css
+```
+***Note: Replace `{version}` with the version you want to use.***
+
+[Learn more about the CDN](https://www.jsdelivr.com/features#gh)
+
+### Self Hosting
+Copy `mdtimepicker.css` and `mdtimepicker.js` and include in your app:
+```html
+<link rel="stylesheet" type="text/css" href="{path-to}/mdtimepicker.css">
+<script type="text/javascript" src="{path-to}/mdtimepicker.js"></script>
+```
+***Note: Replace `{path-to}` with the absolute or relative path to where you copied the css and js files.***
+
 ## Options
 Default time picker configurations.
 ```javascript
@@ -39,42 +75,11 @@ $('#timepicker').mdtimepicker({format: 'hh:mm'}); //Initializes the time picker 
 ```
 ***Note: If `is24hour` configuration is set to `true`, `format` default will be `hh:mm`.***
 
-## How to use
-Make sure you include the jQuery library first.
-Include `mdtimepicker.css` and `mdtimepicker.js` in your html file:
-```html
-<link rel="stylesheet" type="text/css" href="mdtimepicker.css">
-<script type="text/javascript" src="mdtimepicker.js"></script>
-```
-
-Add a reference on your `input` element for later use:
-```html
-<input type="text" id="timepicker"/>
-```
-
-Then add this piece of code in your `script` tag:
+## Usage
+Add this piece of code in your script:
 ```javascript
-<script>
-  $(document).ready(function(){
-    $('#timepicker').mdtimepicker(); //Initializes the time picker
-  });
-</script>
+$('#timepicker').mdtimepicker(); //Initializes the time picker
 ```
-
-### CDN
-Use the following if you don't want to host the `js` and `css` files:
-```
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.css
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.js
-```
-Minified version:
-```
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.min.css
-https://cdn.jsdelivr.net/gh/dmuy/MDTimePicker@{version}/mdtimepicker.min.css
-```
-***Note: Replace `{version}` with the version you want to use.***
-
-[Learn more about the CDN](https://www.jsdelivr.com/features#gh)
 
 ### Using configurations
 During initialization, you can also specify the configurations like min and max time.
@@ -135,12 +140,6 @@ $('#timepicker').mdtimepicker().on('timechanged', function(e){
 });
 ```
 
-### Remember
-Comment or remove the line shown below in the css file if you already have a link to the Roboto font.
-```css
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-```
-
 ### Themes
 You can specify the color theme of the time picker by adding `theme` option upon initialization:
 ```javascript
@@ -153,4 +152,13 @@ Or by adding a data-theme attribute on the input element:
 ***Note: If `data-theme` attribute is used, `theme` configuration will be overridden.***
 
 Predefined themes are: `red`,`blue`, `green`, `purple`, `indigo`, `teal` and `dark`.
-If you don't specify the theme to use or specify a theme which isn't there, the default theme will be used.
+If you don't specify the theme, the default theme (`blue`) will be used.
+
+#### Custom theme
+If you want to customize the theme, just follow the `mdtimepicker-theme.css` format, and change the `{theme}` in `.mdtp__wrapper[data-theme='{theme}']` to your desired theme name.
+
+### Remember
+Comment or remove the line shown below in the css file if you already have a link to the Roboto font.
+```css
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+```

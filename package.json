@@ -1,0 +1,23 @@
+{
+    "name": "@dmuy/jquery-timepicker",
+    "version": "1.0.2-rc2",
+    "description": "jQuery time picker plugin for input fields.",
+    "keywords": [
+        "jquery-timepicker", "timepicker", "material", "material-timepicker", "timepicker-dialog"
+    ],
+    "license": "MIT",
+    "author": {
+        "name": "Dionlee Uy",
+        "email": "dionleeuy@gmail.com"
+    },
+    "repository": "git://github.com/dmuy/MDTimePicker.git",
+    "homepage": "https://dmuy.github.io/MDTimePicker/",
+    "main": "mdtimepicker.js",
+    "files": [
+        "mdtimepicker.js",
+        "mdtimepicker.css"
+    ],
+    "dependencies": {
+        "jquery": "^3.5.1"
+    }
+}

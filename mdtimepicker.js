@@ -625,6 +625,6 @@
 		theme: 'blue',				// theme of the timepicker
 		hourPadding: false,			// determines if display value has zero padding for hour value less than 10 (i.e. 05:30 PM); 24-hour format has padding by default
 		clearBtn: false,            // determines if clear button is visible
-		is24hour: false             // determines if the clock will use 24-hour format in the UI
+		is24hour: false             // determines if the clock will use 24-hour format in the UI; format config will be forced to `hh:mm` if not specified
 	};
 });
