@@ -126,7 +126,7 @@
 		picker.clockHolder.buttonsHolder.btnOk.click(function () {
 			var selected = _.selected;
 
-			if (_.isDisabled(selected.getHour(), selected.getMinutes())) return;
+			if (_.isDisabled(selected.getHour(), selected.getMinutes(), false)) return;
 
 			_.setValue(selected);
 
@@ -200,7 +200,7 @@
 						_selectedT = _.selected.getPeriod(),
 						_value = _.config.is24hour ? _hour :
 							(_hour + ((_selectedT === 'PM' && _hour < 12) || (_selectedT === 'AM' && _hour === 12) ? 12 : 0)) % 24,
-						disabled = _.isDisabled(_value, 0);
+						disabled = _.isDisabled(_value, 0, true);
 
 					if (disabled) return;
 
@@ -222,7 +222,7 @@
 				minute.find('span').click(function () {
 					var _minute = parseInt($(this).parent().data('minute')),
 						_hour = _.selected.getHour(),
-						disabled = _.isDisabled(_hour, _minute);
+						disabled = _.isDisabled(_hour, _minute, true);
 
 					if (disabled) return;
 
@@ -362,7 +362,7 @@
 
 					if (!_.config.is24hour && period !== time.getPeriod()) time.invert();
 
-					var disabled = _.isDisabled(time.getHour(), 0);
+					var disabled = _.isDisabled(time.getHour(), 0, true);
 
 					hour[disabled ? 'addClass' : 'removeClass']('digit--disabled');
 				});
@@ -372,7 +372,7 @@
 				clock.minutes.find('.mdtp__digit').each(function (i, mEl) {
 					var minute = $(mEl), value = parseInt(minute.data('minute')),
 						hour = _.selected.getHour(),
-						disabled = _.isDisabled(hour, value);
+						disabled = _.isDisabled(hour, value, true);
 
 					minute[disabled ? 'addClass' : 'removeClass']('digit--disabled');
 				});
@@ -383,8 +383,9 @@
 		 * Determines if the given time is disabled
 		 * @param {number} hour Hour value
 		 * @param {number} minute Minute value
+		 * @param {boolean} renderMode `true` if called upon rendering; `false` otherwise
 		 */
-		isDisabled: function (hour, minute) {
+		isDisabled: function (hour, minute, renderMode) {
 			var _ = this, minT = null, min = null, maxT = null, max = null, now = new Date(),
 				time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0, 0),
 				hourView = _.activeView === 'hours';
@@ -394,12 +395,12 @@
 
 			if (minT) {
 				min = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
-					minT.getHour(), hourView ? 0 : minT.getMinutes(), 0, 0)
+					minT.getHour(), hourView && renderMode ? 0 : minT.getMinutes(), 0, 0)
 			}
 
 			if (maxT) {
 				max = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
-					maxT.getHour(), hourView ? 0 : maxT.getMinutes(), 0, 0)
+					maxT.getHour(), hourView && renderMode ? 0 : maxT.getMinutes(), 0, 0)
 			}
 
 			return (min && time < min) || (max && time > max);
