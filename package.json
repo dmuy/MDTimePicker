@@ -1,7 +1,7 @@
 {
     "name": "@dmuy/timepicker",
     "version": "2.0.0-rc",
-    "description": "Time picker plugin for input fields.",
+    "description": "Material design inspired time picker plugin for input elements.",
     "keywords": [
         "time-picker",
         "material-design",
