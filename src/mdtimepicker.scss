@@ -1,0 +1,319 @@
+/*!Don't remove this!
+ * MDTimePicker plugin styles
+ * 
+ * Author: Dionlee Uy
+ * Email: dionleeuy@gmail.com
+ */
+
+ @import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
+
+ $degrees: -15, 6, 12, 15, 18, 24, 30, 36, 42, 45, 48, 54, 60, 66, 72, 75, 78, 84, 90, 96, 102, 105, 108, 114, 120, 126, 132, 135, 138, 144, 150, 156, 162, 165, 168, 174,
+    180, 186, 192, 195, 198, 204, 210, 216, 222, 225, 228, 234, 240, 246, 252, 255, 258, 264, 270, 276, 282, 285, 288, 294, 300, 306, 312, 315, 318, 324, 330, 336, 342,
+    348, 354, 360;
+
+ .mdtimepicker {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	font-family: Roboto, sans-serif;
+	font-size: 14px;
+	background-color: rgba(10,10,10,.65);
+	transition: background-color .28s ease;
+    z-index: 100001;
+
+    .mdtp__wrapper {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        left: 50%;
+        bottom: 24px;
+        min-width: 280px;
+        opacity: 1;
+        outline: none;
+        user-select: none;
+        border-radius: 4px;
+        transform: translateX(-50%) scale(1);
+        box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+        transition: transform .28s ease, opacity .28s ease;
+        overflow: hidden;
+
+        &.animate {
+            transform: translateX(-50%) scale(1.05);
+            opacity: 0;
+        }
+    }
+
+    .mdtp__time_holder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        font-size: 46px;
+        padding: 20px 24px;
+        color: rgba(255,255,255,.5);
+        text-align: center;
+        background-color: #1565c0;
+
+        & > span {
+            display: inline-block;
+            line-height: 48px;
+            cursor: default;
+
+            &:not(.mdtp__timedots):not(.mdtp__ampm) {
+                cursor: pointer;
+                margin: 0 4px;
+            }
+        }
+
+        .mdtp__time_h.active,
+        .mdtp__time_m.active { color: #fafafa; }
+
+        .mdtp__ampm { font-size: 18px; }
+    }
+
+    .mdtp__clock_holder {
+        position: relative;
+        background-color: #fff;
+
+        .mdtp__clock {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 20px;
+            border-radius: 50%;
+            background-color: #eee;
+
+            .mdtp__am,
+            .mdtp__pm {
+                display: block;
+                position: absolute;
+                bottom: -8px;
+                width: 36px;
+                height: 36px;
+                line-height: 36px;
+                text-align: center;
+                cursor: pointer;
+                border-radius: 50%;
+                border: 1px solid rgba(0,0,0,.1);
+                background: rgba(0,0,0,.05);
+                transition: background-color .2s ease, color .2s;
+                z-index: 3;
+
+                &:hover { background-color: rgba(0,0,0,.1); }
+
+                &.active {
+                    color: #fafafa;
+                    background-color: #1565c0;
+                }
+            }
+
+            .mdtp__am { left: -8px; }
+
+            .mdtp__pm { right: -8px; }
+
+            .mdtp__clock_dot {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                padding: 4px;
+                border-radius: 50%;
+                background-color: #1565c0;
+                transform: translate(-50%,-50%);
+            }
+
+            .mdtp__hour_holder,
+            .mdtp__minute_holder {
+                position: absolute;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 1;
+                transform: scale(1);
+                transition: transform .35s cubic-bezier(0.4, 0.0, 0.2, 1), opacity .35s ease;
+                overflow: hidden;
+
+                &.hidden { display: none; }
+            }
+
+            .mdtp__hour_holder.animate {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+
+            .mdtp__minute_holder.animate {
+                transform: scale(.8);
+                opacity: 0;
+            }
+
+            .mdtp__digit {
+                position: absolute;
+                width: 50%;
+                top: 50%;
+                left: 0;
+                margin-top: -16px;
+                transform-origin: right center;
+                z-index: 1;
+
+                span { 
+                    display: inline-block;
+                    width: 32px;
+                    height: 32px;
+                    line-height: 32px;
+                    margin-left: 8px;
+                    text-align: center;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    transition: background-color .28s, color .14s;
+                }
+
+                &.inner--digit {
+                    width: 36%;
+                    left: 14%;
+                    z-index: 2;
+                }
+
+                &.active span,
+                &:not(.digit--disabled) span:hover {
+                    background-color: #1565c0 !important;
+                    color: #fff;
+                    z-index: 2;
+                }
+
+                &.digit--disabled span {
+                    color: rgb(200,200,200);
+                    cursor: not-allowed;
+                    background-color: transparent !important;
+                }
+
+                &.active:before {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    top: calc(50% - 1px);
+                    right: 0;
+                    height: 2px;
+                    width: calc(100% - 40px);
+                    background-color: #1565c0;
+                }
+            }
+
+            .mdtp__minute_holder {
+                .mdtp__digit {
+                    font-size: 13px;
+
+                    &:not(.marker) {
+                        margin-top: -6px;
+                        height: 12px;
+
+                        span {
+                            width: 12px;
+                            height: 12px;
+                            line-height: 12px;
+                            margin-left: 14px;
+                        }
+                    }
+
+                    &:not(.marker).active:before { width: calc(100% - 26px); }
+
+                    &.marker {
+                        margin-top: -12px;
+
+                        span {
+                            width: 24px;
+                            height: 24px;
+                            line-height: 24px;
+                            margin-left: 10px;
+                        }
+                    }
+
+                    &.marker.active:before { width: calc(100% - 34px); }
+                }
+            }
+        }
+    }
+
+    .mdtp__buttons {
+        padding: 0 10px 10px;
+        text-align: right;
+
+        .mdtp__button {
+            display: inline-block;
+            padding: 0 16px;
+            min-width: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            line-height: 32px;
+            font-weight: 500;
+            cursor: pointer;
+            color: #1565c0;
+            border-radius: 4px;
+            transition: background-color .2s linear;
+
+            &:hover { background-color: rgba(0,0,0,.1); }
+
+            &:active { background-color: rgba(0,0,0,.2); }
+
+            &.clear-btn {
+                float: left;
+                color: #ef5350 !important;
+            }
+        }
+
+        &:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
+    
+    &.hidden { display: none; }
+    &.animate { background-color: transparent; }
+}
+
+@each $degree in $degrees {
+    .mdtp__digit.rotate-#{$degree} {
+        transform: rotate(#{$degree}deg);
+
+        span {
+            transform: rotate(#{0 - $degree}deg);
+        }
+    }
+}
+
+body[mdtimepicker-display='on'] { overflow: hidden; }
+
+@media (max-height: 360px) {
+    .mdtimepicker {
+        .mdtp__wrapper {
+            flex-direction: row;
+            bottom: 8px;
+        }
+
+        .mdtp__time_holder { 
+            width: 160px;
+            padding: 20px;
+        }
+
+        .mdtp__clock {
+            .mdtp__am, .mdtp__pm { bottom: -4px; }
+
+            .mdtp__am { left: -4px; }
+            .mdtp__pm { right: -4px; }
+        }
+    }
+}
+
+@media (max-height: 320px) {
+    .mdtimepicker .mdtp__wrapper { bottom: 0; }
+}
+
+// themes
+@import './themes/red.scss';
+@import './themes/green.scss';
+@import './themes/blue.scss';
+@import './themes/teal.scss';
+@import './themes/purple.scss';
+@import './themes/indigo.scss';
+@import './themes/dark.scss';

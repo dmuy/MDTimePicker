@@ -1,0 +1,41 @@
+$theme: 'dark';
+$headerBg: #121212;
+$contentBg: rgb(29,29,29);
+$clockBg: rgb(24,24,24);
+$color: rgba(255,255,255,.87);
+$periodBg: rgba(200,200,200,.05);
+$disabled: rgba(100,100,100,.87);
+$btnColor: #42a5f5;
+$btnHover: rgba(255,255,255,.04);
+$btnActive: rgba(255,255,255,.1);
+
+.mdtp__wrapper[data-theme='#{$theme}'] {
+	.mdtp__time_holder { background-color: $headerBg; }
+	.mdtp__clock_holder {
+		background-color: $contentBg;
+
+		.mdtp__clock {
+			background-color: $clockBg;
+
+			.mdtp__digit {
+				&:not(.digit--disabled) { color: $color; }
+
+				&.digit--disabled span { color: $disabled; }
+			}
+
+			.mdtp__am:not(.active),
+			.mdtp__pm:not(.active) {
+				color: $color;
+				background-color: $periodBg;
+			}
+		}
+	}
+
+	.mdtp__button {
+		color: $btnColor;
+
+		&:hover { background-color: $btnHover; }
+
+		&:active { background-color: $btnActive; }
+	}
+}

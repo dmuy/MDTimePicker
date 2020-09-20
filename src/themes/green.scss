@@ -1,0 +1,23 @@
+$theme: 'green';
+$color: #2e7d32;
+
+.mdtp__wrapper[data-theme='#{$theme}'] {
+    .mdtp__time_holder { background-color: $color; }
+
+    .mdtp__clock {
+        .mdtp__am.active,
+        .mdtp__pm.active,
+        .mdtp__clock_dot { background-color: $color; }
+
+        .mdtp__digit {
+            &.active span,
+            &:not(.digit--disabled) span:hover {
+                background-color: $color !important;
+            }
+
+            &.active:before { background-color: $color; }
+        }
+    }
+
+    .mdtp__button { color: $color; }
+}

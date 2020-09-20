@@ -1,9 +1,12 @@
 {
-    "name": "@dmuy/jquery-timepicker",
-    "version": "1.0.2",
-    "description": "jQuery time picker plugin for input fields.",
+    "name": "@dmuy/timepicker",
+    "version": "2.0.0-rc",
+    "description": "Time picker plugin for input fields.",
     "keywords": [
-        "jquery-timepicker", "timepicker", "material", "material-timepicker", "timepicker-dialog"
+        "time-picker",
+        "material-design",
+        "material-timepicker",
+        "material-time-picker"
     ],
     "license": "MIT",
     "author": {
@@ -12,12 +15,30 @@
     },
     "repository": "git://github.com/dmuy/MDTimePicker.git",
     "homepage": "https://dmuy.github.io/MDTimePicker/",
-    "main": "mdtimepicker.js",
+    "main": "dist/mdtimepicker.js",
     "files": [
-        "mdtimepicker.js",
-        "mdtimepicker.css"
+        "dist"
     ],
-    "dependencies": {
-        "jquery": "^3.5.1"
+    "scripts": {
+        "build": "npm run compile && npm run minify",
+        "build-theme": "npm run compile-css && npm run minify-theme-css",
+        "compile": "rollup --config rollup.config.js && npm run compile-css",
+        "compile-css": "node-sass -x --output-style=expanded src/mdtimepicker.scss -o=dist && postcss --no-map -u autoprefixer -r dist/mdtimepicker.css",
+        "compile-theme-css": "node-sass -x --output-style=expanded src/themes/_format.scss dist/mdtimepicker-theme.css && postcss --no-map -u autoprefixer -r dist/mdtimepicker-theme.css",
+        "minify": "uglifyjs dist/mdtimepicker.js -c -m -o dist/mdtimepicker.min.js && npm run minify-css",
+        "minify-css": "postcss dist/mdtimepicker.css --no-map -o dist/mdtimepicker.min.css --config postcss.config.js",
+        "minify-theme-css": "postcss dist/mdtimepicker-theme.css --no-map -o dist/mdtimepicker-theme.min.css --config postcss.config.js"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.11.6",
+        "@babel/preset-env": "^7.11.5",
+        "@rollup/plugin-babel": "^5.2.1",
+        "@rollup/plugin-node-resolve": "^9.0.0",
+        "autoprefixer": "^9.8.6",
+        "cssnano": "^4.1.10",
+        "node-sass": "^4.14.1",
+        "postcss-cli": "^7.1.2",
+        "rollup": "^2.27.0",
+        "uglify-js": "^3.10.4"
     }
 }

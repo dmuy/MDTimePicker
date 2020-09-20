@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Timepicker Plugin</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="../dist/mdtimepicker.css">
+	<link rel="stylesheet" type="text/css" href="../dist/mdtimepicker-theme.css">
+	<style type="text/css">
+		html,
+		body {
+			min-height: 100%;
+			background-color: #f5f5f5;
+		}
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+		.stats { margin-bottom: 12px; }
+		.stats a { text-decoration: none; }
+		.stats a + a { margin-left: 8px; }
+		#logger { margin-top: 24px; }
+		#logger span { display: block; }
+		#logger textarea {
+			width: 400px;
+			max-width: 100%;
+			margin-top: 4px;
+			resize: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<h1>MDTimePicker</h1>
+		<div class="stats">
+			<a href="https://www.npmjs.com/package/@dmuy/jquery-timepicker" rel="noreferrer" target="_blank">
+				<img alt="npm" src="https://img.shields.io/npm/dt/@dmuy/jquery-timepicker?style=flat-square">
+			</a>
+			<a href="https://github.com/dmuy/MDTimePicker" rel="noreferrer" target="_blank">
+				<img src="https://img.shields.io/github/stars/dmuy/MDTimePicker?style=social" alt="stars">
+			</a>
+		</div>
+		<h2>Time picker</h2>
+		<input type="text" class="timepicker" id="picker1" data-theme="dark" data-mintime="now">
+		<input type="text" class="timepicker" id="picker2" data-theme="yellow" data-maxtime="now">
+		<div id="logger">
+			<span>Logger:</span>
+			<textarea id="loggerTxt" rows="10" disabled></textarea>
+		</div>
+	</div>
+	<script type="text/javascript" src="../dist/mdtimepicker.js"></script>
+	<script type="text/javascript">
+	function log (message) {
+		document.querySelector('#loggerTxt').value = message
+	}
+
+	window.onload = function () {
+		mdtimepicker('#picker1', {
+			events: {
+				timeChanged: function (data) {
+					console.log('timeChanged', data)
+					log('timeChanged: ' + data.value)
+				}
+			}
+		})
+		// mdtimepicker('#picker1', 'setValue', '12:00 PM')
+
+		mdtimepicker('#picker2', { readOnly: false, is24hour: true, //format: 'h:mm tt',
+			events: {
+				ready: function() { console.log('ready', this) },
+				shown: function() { console.log('shown', this) },
+				hidden: function() { console.log('hidden', this) },
+				timeChanged: function (data) {
+					console.log('timeChanged', data)
+					log('timeChanged: ' + data.value)
+				}
+			}
+		})
+	}
+	</script>
+</body>
+</html>
