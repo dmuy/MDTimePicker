@@ -1,6 +1,6 @@
 {
     "name": "@dmuy/timepicker",
-    "version": "2.0.0-rc",
+    "version": "2.0.0",
     "description": "Material design inspired time picker plugin for input elements.",
     "keywords": [
         "time-picker",
@@ -17,7 +17,8 @@
     "homepage": "https://dmuy.github.io/MDTimePicker/",
     "main": "dist/mdtimepicker.js",
     "files": [
-        "dist"
+        "dist",
+        "vue-timepicker.js"
     ],
     "scripts": {
         "build": "npm run compile && npm run minify",

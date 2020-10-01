@@ -252,7 +252,7 @@
 
       function CustomEvent(data) {
         var changeEvt = document.createEvent('CustomEvent');
-        changeEvt.initCustomEvent('datechanged', false, false);
+        changeEvt.initCustomEvent('timechanged', false, false);
         changeEvt.data = data;
         return changeEvt;
       }
