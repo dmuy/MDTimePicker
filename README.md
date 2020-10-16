@@ -3,6 +3,8 @@ MDTimePicker
 [![jquery version](https://img.shields.io/npm/dt/@dmuy/jquery-timepicker?style=flat-square)](https://www.npmjs.com/package/@dmuy/jquery-timepicker)
 [![vanilla js](https://img.shields.io/npm/dt/@dmuy/timepicker?style=flat-square)](https://www.npmjs.com/package/@dmuy/timepicker)
 
+[![Buy Me A Coffee](https://i.imgur.com/PbiWKn8.png)](https://www.buymeacoffee.com/dmuy)
+
 Material design inspired time picker plugin.
 
 ## Documentation
