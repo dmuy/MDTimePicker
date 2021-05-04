@@ -41,5 +41,6 @@
         "postcss-cli": "^7.1.2",
         "rollup": "^2.27.0",
         "uglify-js": "^3.10.4"
-    }
+    },
+    "dependencies": {}
 }

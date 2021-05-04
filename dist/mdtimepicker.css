@@ -64,6 +64,7 @@
 .mdtimepicker .mdtp__time_holder > span:not(.mdtp__timedots):not(.mdtp__ampm) {
   cursor: pointer;
   margin: 0 4px;
+  transition: color .2s linear;
 }
 
 .mdtimepicker .mdtp__time_holder .mdtp__time_h.active,
@@ -73,6 +74,12 @@
 
 .mdtimepicker .mdtp__time_holder .mdtp__ampm {
   font-size: 18px;
+  cursor: pointer;
+  transition: color .2s linear;
+}
+
+.mdtimepicker .mdtp__time_holder .mdtp__ampm:hover {
+  color: #fafafa;
 }
 
 .mdtimepicker .mdtp__clock_holder {

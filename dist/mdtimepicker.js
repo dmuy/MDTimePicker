@@ -445,6 +445,13 @@
 
         _.hide();
       });
+
+      if (!config.is24hour) {
+        hf.addEvent(picker.timeHolder.am_pm, 'click', function () {
+          _.setPeriod(_.selected.getPeriod() == 'AM' ? 'pm' : 'am');
+        });
+      }
+
       hf.addEvent(picker.clockHolder.am, 'click', function () {
         if (_.selected.getPeriod() !== 'AM') _.setPeriod('am');
       });

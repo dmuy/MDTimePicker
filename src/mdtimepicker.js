@@ -108,6 +108,12 @@ class MDTimePicker {
 
 			_.hide()
 		})
+
+		if (!config.is24hour) {
+			hf.addEvent(picker.timeHolder.am_pm, 'click', () => {
+				_.setPeriod(_.selected.getPeriod() == 'AM' ? 'pm' : 'am')
+			})
+		}
 		
 		hf.addEvent(picker.clockHolder.am, 'click', () => {
 			if (_.selected.getPeriod() !== 'AM') _.setPeriod('am')

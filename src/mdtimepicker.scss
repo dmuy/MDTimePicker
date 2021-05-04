@@ -64,13 +64,22 @@
             &:not(.mdtp__timedots):not(.mdtp__ampm) {
                 cursor: pointer;
                 margin: 0 4px;
+                transition: color .2s linear;
             }
         }
 
         .mdtp__time_h.active,
         .mdtp__time_m.active { color: #fafafa; }
 
-        .mdtp__ampm { font-size: 18px; }
+        .mdtp__ampm { 
+            font-size: 18px;
+            cursor: pointer;
+            transition: color .2s linear;
+
+            &:hover {
+                color: #fafafa;
+            }
+        }
     }
 
     .mdtp__clock_holder {
