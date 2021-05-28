@@ -44,8 +44,8 @@
 			</a>
 		</div>
 		<h2>Time picker</h2>
-		<input type="text" class="timepicker" id="picker1" data-theme="dark" data-mintime="now">
-		<input type="text" class="timepicker" id="picker2" data-theme="yellow" data-maxtime="now">
+		<input type="text" class="timepicker" id="picker1" data-mintime="now">
+		<input type="text" class="timepicker" id="picker2" data-theme="dark" data-maxtime="now">
 		<div id="logger">
 			<span>Logger:</span>
 			<textarea id="loggerTxt" rows="10" disabled></textarea>
@@ -53,6 +53,7 @@
 	</div>
 	<script type="text/javascript" src="../dist/mdtimepicker.js"></script>
 	<script type="text/javascript">
+	mdtimepicker.defaults({ theme: 'green', hourPadding: true, clearBtn: true });
 	function log (message) {
 		document.querySelector('#loggerTxt').value = message
 	}

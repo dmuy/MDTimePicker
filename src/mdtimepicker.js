@@ -48,6 +48,10 @@ class Time {
  */
 class MDTimePicker {
 	/**
+	 * Default configurations
+	 */
+	static default_configs = null;
+	/**
 	 * Creates a time picker object
 	 * @param {HTMLInputElement} el Input element
 	 * @param {Object} config Time picker configurations
@@ -643,7 +647,7 @@ function mdtimepicker() {
 		inputs = typeof arg0 === 'string' ? document.querySelectorAll(arg0) :
 			(arg0IsList ? arg0 : (arg0IsElem ? [arg0] : document.querySelectorAll(DEFAULT_CLASS))),
 		options = typeof arg0 === 'object' && !(arg0IsList) && !(arg0IsElem) ? arg0 : args[1] && typeof args[1] === 'object' ? args[1] : {},
-		_defaults = hf.extend({}, DEFAULTS)
+		_defaults = hf.extend({}, MDTimePicker.default_configs || DEFAULTS)
 
 	if (options && options.is24hour) _defaults.format = 'hh:mm'
 
@@ -658,6 +662,10 @@ function mdtimepicker() {
 			picker[args[1]].apply(picker, Array.prototype.slice.call(args).slice(2))
 		}
 	})
+}
+
+mdtimepicker.defaults = function (configs) {
+	MDTimePicker.default_configs = hf.extend(DEFAULTS, configs)
 }
 
 export default mdtimepicker

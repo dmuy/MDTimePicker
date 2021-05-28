@@ -49,6 +49,21 @@
     return Constructor;
   }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
   var MDTP_DATA = '_mdtimepicker';
   /**
    * Default time picker input query selector class
@@ -346,6 +361,10 @@
 
 
   var MDTimePicker = /*#__PURE__*/function () {
+    /**
+     * Default configurations
+     */
+
     /**
      * Creates a time picker object
      * @param {HTMLInputElement} el Input element
@@ -881,8 +900,8 @@
             lM = format.lastIndexOf('m'),
             fT = format.indexOf('t'); // Parse minute
 
-        var prevM = format.substring(fM - 1, fM),
-            nextM = format.substring(lM + 1, lM + 2);
+        var prevM = format.substring(fM - 1, fM);
+            format.substring(lM + 1, lM + 2);
 
         if (lM === format.length - 1) {
           min = time.substring(time.indexOf(prevM, fM - 1) + 1, timeLength);
@@ -1038,6 +1057,8 @@
    */
 
 
+  _defineProperty(MDTimePicker, "default_configs", null);
+
   function mdtimepicker() {
     var args = arguments,
         arg0 = args[0],
@@ -1045,7 +1066,7 @@
         arg0IsElem = arg0 instanceof Element,
         inputs = typeof arg0 === 'string' ? document.querySelectorAll(arg0) : arg0IsList ? arg0 : arg0IsElem ? [arg0] : document.querySelectorAll(DEFAULT_CLASS),
         options = _typeof(arg0) === 'object' && !arg0IsList && !arg0IsElem ? arg0 : args[1] && _typeof(args[1]) === 'object' ? args[1] : {},
-        _defaults = hf.extend({}, DEFAULTS);
+        _defaults = hf.extend({}, MDTimePicker.default_configs || DEFAULTS);
 
     if (options && options.is24hour) _defaults.format = 'hh:mm';
     Array.from(inputs).forEach(function (el) {
@@ -1060,6 +1081,10 @@
       }
     });
   }
+
+  mdtimepicker.defaults = function (configs) {
+    MDTimePicker.default_configs = hf.extend(DEFAULTS, configs);
+  };
 
   return mdtimepicker;
 
