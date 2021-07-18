@@ -7,9 +7,9 @@ export const hf = {
      * @param {Element|Element[]} elem Element(s) to append to parent
      * @param {Element} to Parent element
      */
-    appendTo: function (elem, to, idx) {
+    appendTo (elem, to, idx) {
         if (Array.isArray(elem)) {
-            elem.forEach(function (el) {
+            elem.forEach(el => {
                 if (idx === 0) to.insertBefore(el, to.childNodes[idx] || null)
                 else to.appendChild(el)
             })
@@ -24,15 +24,13 @@ export const hf = {
      * @param {string} event Event name
      * @param {Function} handler Event handler
      */
-    addEvent: function (elem, event, handler) {
+    addEvent (elem, event, handler) {
         function listenEvent(el, evt, fn) {
             el.addEventListener(evt, fn, false)
         }
 
         if (Array.isArray(elem)) {
-            elem.forEach(function (e) {
-                listenEvent(e, event, handler)
-            })
+            elem.forEach(e => listenEvent(e, event, handler))
         } else listenEvent(elem, event, handler)
     },
     /**
@@ -41,20 +39,20 @@ export const hf = {
      * @param {string} event Event name
      * @param {Function} handler Event handler
      */
-    removeEvent: function (elem, event, handler) {
+    removeEvent (elem, event, handler) {
         function delEvent(el, evt, fn) {
             el.removeEventListener(evt, fn, false)
         }
 
         if (Array.isArray(elem)) {
-            elem.forEach(function (e) { delEvent(e, event, handler) })
+            elem.forEach(e => delEvent(e, event, handler))
         } else delEvent(elem, event, handler)
     },
     /**
      * Removes child nodes
      * @param {Element} elem Html element to empty
      */
-    empty: function (elem) {
+    empty (elem) {
         while (elem.firstChild) { elem.removeChild(elem.firstChild) }
     },
     /**
@@ -65,7 +63,7 @@ export const hf = {
      * @param {string|Element} content Element content: text or HTML element(s)
      * @param {Boolean} isHtml Determines if `content` specified should added as an html element
      */
-    createElem: function (tag, attributes, content, isHtml) {
+    createElem (tag, attributes, content, isHtml) {
         var el = document.createElement(tag)
 
         if (typeof content !== 'undefined')
@@ -81,14 +79,14 @@ export const hf = {
      * @param {Element} el Html element
      * @param {Object} attrs Attribute object
      */
-    setAttributes: function (el, attrs) {
+    setAttributes (el, attrs) {
         for(var attr in attrs) { el.setAttribute(attr, attrs[attr]) }
     },
     /**
     * Vanilla JavaScript version of jQuery.extend()
     * @see {@link https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/}
     */
-    extend: function () {
+    extend () {
         // Variables
         var extended = {}
         var deep = false
@@ -128,18 +126,25 @@ export const hf = {
      * @param {HTMLInputElement} el HTML input element
      * @param {Object} data Event data
      */
-    triggerChange: function (el, data) {
-        el.dispatchEvent(new Event('change'))
-        el.dispatchEvent(new Event('onchange'))
+    triggerChange (el, data) {
+        let change = document.createEvent('Event')
+        let onChange = document.createEvent('Event')
+        
+        change.initEvent('change', false, false)
+        onChange.initEvent('onchange', false, false)
+
+        el.dispatchEvent(change)
+        el.dispatchEvent(onChange)
 
         function CustomEvent(data) {
-            var changeEvt = document.createEvent('CustomEvent')
+            let changeEvt = document.createEvent('CustomEvent')
 
-            changeEvt.initCustomEvent('timechanged', false, false)
+            changeEvt.initCustomEvent('datechanged', false, false, null)
             changeEvt.data = data
 
             return changeEvt
         }
+
         el.dispatchEvent(new CustomEvent(data))
     }
 }
