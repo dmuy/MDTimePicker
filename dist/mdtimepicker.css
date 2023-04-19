@@ -29,7 +29,6 @@
   outline: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   border-radius: 4px;
   transform: translateX(-50%) scale(1);

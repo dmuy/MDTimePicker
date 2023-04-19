@@ -2,13 +2,13 @@ import './dist/mdtimepicker.css'
 import mdtimepicker from './dist/mdtimepicker.js'
 
 export default {
-    install(Vue, options) {
+    install(app, options) {
 
         if (! options) options = {}
         else mdtimepicker.defaults(options)
 
         // <mdtimepicker /> component
-        Vue.component('mdtimepicker', {
+        app.component('mdtimepicker', {
             render(createElement) {
                 return createElement('input', {
                     domProps: {
@@ -53,7 +53,7 @@ export default {
         })
 
         // v-mdtimepicker directive
-        Vue.directive('mdtimepicker', {
+        app.directive('mdtimepicker', {
             bind(el, binding) {
                 mdtimepicker(el, binding.value)
             },

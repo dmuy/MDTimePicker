@@ -1,6 +1,6 @@
 {
     "name": "@dmuy/timepicker",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Material design inspired time picker plugin for input elements.",
     "keywords": [
         "time-picker",
@@ -18,12 +18,13 @@
     "main": "dist/mdtimepicker.js",
     "files": [
         "dist",
-        "vue-timepicker.js"
+        "vue-timepicker.js",
+        "vue3-timepicker.js"
     ],
     "scripts": {
         "build": "npm run compile && npm run minify",
         "build-theme": "npm run compile-css && npm run minify-theme-css",
-        "compile": "rollup --config rollup.config.js && npm run compile-css",
+        "compile": "rollup --config rollup.config.mjs && npm run compile-css",
         "compile-css": "node-sass -x --output-style=expanded src/mdtimepicker.scss -o=dist && postcss --no-map -u autoprefixer -r dist/mdtimepicker.css",
         "compile-theme-css": "node-sass -x --output-style=expanded src/themes/_format.scss dist/mdtimepicker-theme.css && postcss --no-map -u autoprefixer -r dist/mdtimepicker-theme.css",
         "minify": "uglifyjs dist/mdtimepicker.js -c -m -o dist/mdtimepicker.min.js && npm run minify-css",
@@ -31,19 +32,20 @@
         "minify-theme-css": "postcss dist/mdtimepicker-theme.css --no-map -o dist/mdtimepicker-theme.min.css --config postcss.config.js"
     },
     "devDependencies": {
-        "@babel/core": "^7.14.3",
-        "@babel/plugin-proposal-class-properties": "^7.13.0",
-        "@babel/preset-env": "^7.14.4",
-        "@rollup/plugin-babel": "^5.3.0",
-        "@rollup/plugin-commonjs": "^19.0.1",
-        "@rollup/plugin-node-resolve": "^9.0.0",
-        "autoprefixer": "^9.8.6",
-        "core-js": "^3.15.2",
-        "cssnano": "^4.1.11",
-        "node-sass": "^4.14.1",
-        "postcss-cli": "^7.1.2",
-        "rollup": "^2.50.3",
-        "uglify-js": "^3.13.8"
+        "@babel/core": "^7.21.4",
+        "@babel/plugin-proposal-class-properties": "^7.18.6",
+        "@babel/preset-env": "^7.21.4",
+        "@rollup/plugin-babel": "^6.0.3",
+        "@rollup/plugin-commonjs": "^24.1.0",
+        "@rollup/plugin-node-resolve": "^15.0.2",
+        "autoprefixer": "^10.4.14",
+        "core-js": "^3.30.1",
+        "cssnano": "^6.0.0",
+        "node-sass": "^8.0.0",
+        "postcss": "^8.4.21",
+        "postcss-cli": "^10.1.0",
+        "rollup": "^3.20.2",
+        "uglify-js": "^3.17.4"
     },
     "dependencies": {}
 }
