@@ -1,5 +1,6 @@
 import './dist/mdtimepicker.css'
 import mdtimepicker from './dist/mdtimepicker.js'
+import { h } from 'vue'
 
 export default {
     install(app, options) {
@@ -9,8 +10,8 @@ export default {
 
         // <mdtimepicker /> component
         app.component('mdtimepicker', {
-            render(createElement) {
-                return createElement('input', {
+            render() {
+                return h('input', {
                     domProps: {
                         type: 'text'
                     },
