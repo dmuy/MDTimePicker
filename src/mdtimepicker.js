@@ -212,6 +212,11 @@ class MDTimePicker {
 
 		if (!_.config.is24hour) hf.appendTo(time.am_pm, time.wrapper)
 
+		let isMouseDown = false;
+		let hasStartingTouchElementChanged = false;
+
+		const getDataSetFromHandElement = (el) => (el.tagName === "SPAN" ? el.parentNode : el).dataset;
+
 		// Setup hours
 		let _hours = _.config.is24hour ? 24 : 12
 		for (let i = 0; i < _hours; i++) {
@@ -223,22 +228,93 @@ class MDTimePicker {
 			hf.appendTo(hourInner, hour)
 
 			if (_.config.is24hour && value < 13) hour.classList.add('inner--digit')
+
+			hour.mdtpTouchable = true;
+			hourInner.mdtpTouchable = true;
 			
-			hf.addEvent(hourInner, 'click', function() {
-				let _hour = parseInt(this.parentNode.dataset.hour),
+			let onTouchStart = (event) => {
+				event.preventDefault();
+				isMouseDown = true;
+				if (event.target?.mdtpTouchable !== true) return;
+
+				hasStartingTouchElementChanged = false;
+
+				let _hour = parseInt(getDataSetFromHandElement(event.target).hour),
 					_selectedT = _.selected.getPeriod(),
-					_value = _.config.is24hour ? _hour :
-						(_hour + ((_selectedT === 'PM' && _hour < 12) || (_selectedT === 'AM' && _hour === 12) ? 12 : 0)) % 24,
-					disabled = _.isDisabled(_value, 0, true)
+					_value = _.config.is24hour ? _hour : (_hour + (_selectedT === 'PM' && _hour < 12 || _selectedT === 'AM' && _hour === 12 ? 12 : 0)) % 24,
+					disabled = _.isDisabled(_value, 0, true);
 
-				if (disabled) return
+				if (disabled) return;
+				_.setHour(_value);
+			};
 
-				_.setHour(_value)
-				_._switchView('minutes')
-			})
+			var onTouchMove = (event) => {
+				event.preventDefault();
+				if (!isMouseDown) return;
+
+				var touch = event.targetTouches[0];
+				var target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+				if (target?.mdtpTouchable !== true) return;
+
+				if (event.target !== target)
+					hasStartingTouchElementChanged = true;
+
+				var _hour = parseInt(getDataSetFromHandElement(target).hour),
+					_selectedT = _.selected.getPeriod(),
+					_value = _.config.is24hour ? _hour : (_hour + (_selectedT === 'PM' && _hour < 12 || _selectedT === 'AM' && _hour === 12 ? 12 : 0)) % 24,
+					disabled = _.isDisabled(_value, 0, true);
+
+				if (disabled) return;
+				_.setHour(_value);
+			};
+
+			var onMouseMove = (event) => {
+				if (!isMouseDown) return;
+				var _hour = parseInt(getDataSetFromHandElement(event.target).hour),
+					_selectedT = _.selected.getPeriod(),
+					_value = _.config.is24hour ? _hour : (_hour + (_selectedT === 'PM' && _hour < 12 || _selectedT === 'AM' && _hour === 12 ? 12 : 0)) % 24,
+					disabled = _.isDisabled(_value, 0, true);
+				if (disabled) return;
+				_.setHour(_value);
+			};
+
+			var onClick = (event) => {
+				var _hour = parseInt(getDataSetFromHandElement(event.target).hour),
+					_selectedT = _.selected.getPeriod(),
+					_value = _.config.is24hour ? _hour : (_hour + (_selectedT === 'PM' && _hour < 12 || _selectedT === 'AM' && _hour === 12 ? 12 : 0)) % 24,
+					disabled = _.isDisabled(_value, 0, true);
+				if (disabled) return;
+				isMouseDown = false;
+				_.setHour(_value);
+				_._switchView('minutes');
+			};
+
+			var onTouchEnd = (event) => {
+					event.preventDefault();
+					isMouseDown = false;
+					if (!hasStartingTouchElementChanged)
+						_._switchView('minutes');
+			};
+			
+			hf.addEvent(hourInner, 'click', onClick);
+			hf.addEvent(hourInner, 'mousemove', onMouseMove);
+			hf.addEvent(hourInner, 'touchmove', onTouchMove);
+			hf.addEvent(hourInner, 'touchstart', onTouchStart);
+			hf.addEvent(hourInner, 'touchend', onTouchEnd);
+			hf.addEvent(hour, 'click', onClick);
+			hf.addEvent(hour, 'mousemove', onMouseMove);
+			hf.addEvent(hour, 'touchmove', onTouchMove);
+			hf.addEvent(hour, 'touchstart', onTouchStart);
+			hf.addEvent(hour, 'touchend', onTouchEnd);
 
 			hf.appendTo(hour, clock.clock.hours)
 		}
+
+		hf.addEvent(clock.clock.hours, 'mousedown', () => { isMouseDown = true; })
+		hf.addEvent(clock.clock.hours, 'mouseup', () => { isMouseDown = false; })
+		hf.addEvent(clock.clock.hours, 'touchstart', () => { isMouseDown = true; hasStartingTouchElementChanged = false; });
+		hf.addEvent(clock.clock.hours, 'touchend', () => { isMouseDown = false; });
 
 		// Setup minutes
 		for (let i = 0; i < 60; i++) {
@@ -253,18 +329,57 @@ class MDTimePicker {
 				minuteInner.innerText = min
 			}
 			
-			hf.addEvent(minuteInner, 'click', function() {
-				let _minute = parseInt(this.parentNode.dataset.minute),
+			minute.mdtpTouchable = true;
+			minuteInner.mdtpTouchable = true;
+
+			var onTouchMove = (event) => {
+				event.preventDefault();
+				if (!isMouseDown) return;
+
+				var touch = event.touches[0];
+				var target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+				if (target?.mdtpTouchable !== true) return;
+
+				var _minute = parseInt(getDataSetFromHandElement(target).minute),
 					_hour = _.selected.getHour(),
-					disabled = _.isDisabled(_hour, _minute, true)
+					disabled = _.isDisabled(_hour, _minute, true);
 
-				if (disabled) return
+				if (disabled) return;
+				_.setMinute(_minute);
+			};
 
-				_.setMinute(_minute)
-			})
+			var onMouseMove = (event) => {
+				if (!isMouseDown) return;
+				var _minute = parseInt(getDataSetFromHandElement(event.target).minute),
+					_hour = _.selected.getHour(),
+					disabled = _.isDisabled(_hour, _minute, true);
+				if (disabled) return;
+				_.setMinute(_minute);
+			};
 
-			hf.appendTo(minute, clock.clock.minutes)
+			var onClick = (event) => {
+				var _minute = parseInt(getDataSetFromHandElement(event.target).minute),
+					_hour = _.selected.getHour(),
+					disabled = _.isDisabled(_hour, _minute, true);
+					if (disabled) return;
+					_.setMinute(_minute);
+					isMouseDown = false;
+			};
+
+			hf.addEvent(minuteInner, 'click', onClick);
+			hf.addEvent(minuteInner, 'mousemove', onMouseMove);
+			hf.addEvent(minuteInner, 'touchmove', onTouchMove);
+			hf.addEvent(minute, 'mousemove', onMouseMove);
+			hf.addEvent(minute, 'touchmove', onTouchMove);
+
+			hf.appendTo(minute, clock.clock.minutes);
 		}
+
+		hf.addEvent(clock.clock.minutes, 'mousedown', () => { isMouseDown = true; });
+		hf.addEvent(clock.clock.minutes, 'touchstart', () => { isMouseDown = true; });
+		hf.addEvent(clock.clock.minutes, 'mouseup', () => { isMouseDown = false; });
+		hf.addEvent(clock.clock.minutes, 'touchend', () => { isMouseDown = false; });
 
 		// Setup clock
 		if (!_.config.is24hour) {
@@ -662,6 +777,9 @@ function mdtimepicker() {
 			picker[args[1]].apply(picker, Array.prototype.slice.call(args).slice(2))
 		}
 	})
+
+	// Allow for inspection or manipulation of the timepicker after configuration
+	return Array.from(inputs).map(el => el[MDTP_DATA]);
 }
 
 mdtimepicker.defaults = function (configs) {
