@@ -1,5 +1,5 @@
 /*!DO NOT REMOVE!
- * MDTimePicker 2.0.1 plugin
+ * MDTimePicker 2.0.2 plugin
  * https://dmuy.github.io/MDTimePicker/
  *
  * Author: Dionlee Uy
@@ -3004,6 +3004,8 @@
     clearBtn: false,
     // determines if the clock will use 24-hour format in the UI; format config will be forced to `hh:mm` if not specified
     is24hour: false,
+    // determines if +/- minute nudge buttons are shown next to the time display while the minutes view is active
+    minuteNudge: true,
     // callback functions
     events: {
       ready: null,
@@ -3319,6 +3321,22 @@
       this.setMinTime(this.input.dataset.mintime || this.config.minTime);
       this.setMaxTime(this.input.dataset.maxtime || this.config.maxTime);
       var picker = _.timepicker;
+      if (_.config.minuteNudge) {
+        picker.timeHolder.minuteNudgeMinus = hf.createElem('span', {
+          class: 'mdtp__nudge mdtp__nudge_minus',
+          'aria-label': 'Subtract one minute'
+        }, "\u2212");
+        picker.timeHolder.minuteNudgePlus = hf.createElem('span', {
+          class: 'mdtp__nudge mdtp__nudge_plus',
+          'aria-label': 'Add one minute'
+        }, '+');
+        hf.addEvent(picker.timeHolder.minuteNudgeMinus, 'click', function () {
+          _.nudgeMinute(-1);
+        });
+        hf.addEvent(picker.timeHolder.minuteNudgePlus, 'click', function () {
+          _.nudgeMinute(1);
+        });
+      }
       hf.appendTo(_._setup(), document.body);
       hf.addEvent(picker.overlay, 'click', function () {
         _.hide();
@@ -3420,7 +3438,8 @@
           wrapper = picker.wrapper,
           time = picker.timeHolder,
           clock = picker.clockHolder;
-        hf.appendTo([time.hour, time.dots, time.minute], time.wrapper);
+        var timeRow = _.config.minuteNudge ? [time.minuteNudgeMinus, time.hour, time.dots, time.minute, time.minuteNudgePlus] : [time.hour, time.dots, time.minute];
+        hf.appendTo(timeRow, time.wrapper);
         hf.appendTo(time.wrapper, wrapper);
         if (!_.config.is24hour) hf.appendTo(time.am_pm, time.wrapper);
 
@@ -3539,6 +3558,29 @@
         this.timepicker.timeHolder.am_pm.innerText = _period;
         this.timepicker.clockHolder.am.classList[_period === 'AM' ? 'add' : 'remove']('active');
         this.timepicker.clockHolder.pm.classList[_period === 'PM' ? 'add' : 'remove']('active');
+      }
+      /**
+       * Nudges the selected minute value by the given amount, rolling the hour
+       * (and AM/PM period) over as needed
+       * @param {number} delta Amount to adjust the minute by (typically -1 or 1)
+       */
+    }, {
+      key: "nudgeMinute",
+      value: function nudgeMinute(delta) {
+        var _ = this,
+          hour = _.selected.getHour(),
+          minute = _.selected.getMinutes() + delta;
+        if (minute > 59) {
+          minute = 0;
+          hour = (hour + 1) % 24;
+        }
+        if (minute < 0) {
+          minute = 59;
+          hour = (hour + 23) % 24;
+        }
+        _.setHour(hour);
+        _.setMinute(minute);
+        _.setPeriod(_.selected.getPeriod());
       }
       /**
        * Sets the value of the selected time
@@ -3739,6 +3781,7 @@
         _._setDisabled(view);
         picker.timeHolder.hour.classList[view === 'hours' ? 'add' : 'remove']('active');
         picker.timeHolder.minute.classList[view === 'hours' ? 'remove' : 'add']('active');
+        if (_.config.minuteNudge) picker.timeHolder.wrapper.classList[view === 'minutes' ? 'add' : 'remove']('mdtp__minutes-active');
         picker.clockHolder.clock.hours.classList.add('animate');
         if (view === 'hours') picker.clockHolder.clock.hours.classList.remove('hidden');
         clearTimeout(_.hTimeout);

@@ -80,6 +80,21 @@
                 color: #fafafa;
             }
         }
+
+        .mdtp__nudge {
+            display: none;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            font-size: 18px;
+            border-radius: 50%;
+            text-align: center;
+            transition: background-color .2s linear;
+
+            &:hover { background-color: rgba(255,255,255,.15); }
+        }
+
+        &.mdtp__minutes-active .mdtp__nudge { display: inline-block; }
     }
 
     .mdtp__clock_holder {
