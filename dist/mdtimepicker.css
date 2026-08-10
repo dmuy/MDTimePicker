@@ -81,6 +81,25 @@
   color: #fafafa;
 }
 
+.mdtimepicker .mdtp__time_holder .mdtp__nudge {
+  display: none;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  font-size: 18px;
+  border-radius: 50%;
+  text-align: center;
+  transition: background-color .2s linear;
+}
+
+.mdtimepicker .mdtp__time_holder .mdtp__nudge:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.mdtimepicker .mdtp__time_holder.mdtp__minutes-active .mdtp__nudge {
+  display: inline-block;
+}
+
 .mdtimepicker .mdtp__clock_holder {
   position: relative;
   background-color: #fff;

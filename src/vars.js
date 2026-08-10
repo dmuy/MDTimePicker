@@ -51,6 +51,8 @@ export const DEFAULTS = {
     clearBtn: false,
     // determines if the clock will use 24-hour format in the UI; format config will be forced to `hh:mm` if not specified
     is24hour: false,
+    // determines if +/- minute nudge buttons are shown next to the time display while the minutes view is active
+    minuteNudge: false,
     // callback functions
     events: {
         ready: null,
