@@ -1,5 +1,5 @@
 /*!DO NOT REMOVE!
- * MDTimePicker 2.0.1 plugin
+ * MDTimePicker 2.0.2 plugin
  * https://dmuy.github.io/MDTimePicker/
  *
  * Author: Dionlee Uy
@@ -3348,6 +3348,7 @@
         if (_.activeView !== 'minutes') _._switchView('minutes');
       });
       hf.addEvent(picker.clockHolder.buttonsHolder.btnOk, 'click', function () {
+        if (_.input.matches(':disabled')) return;
         var selected = _.selected;
         if (_.isDisabled(selected.getHour(), selected.getMinutes(), false)) return;
         _.setValue(selected);
@@ -3363,6 +3364,7 @@
       });
       if (_.config.clearBtn) {
         hf.addEvent(picker.clockHolder.buttonsHolder.btnClear, 'click', function () {
+          if (_.input.matches(':disabled')) return;
           _.input.value = '';
           hf.setAttributes(_.input, {
             'value': '',

@@ -136,6 +136,8 @@ class MDTimePicker {
 		})
 		
 		hf.addEvent(picker.clockHolder.buttonsHolder.btnOk, 'click', () => {
+			if (_.input.matches(':disabled')) return
+
 			let selected = _.selected
 
 			if (_.isDisabled(selected.getHour(), selected.getMinutes(), false)) return
@@ -152,6 +154,8 @@ class MDTimePicker {
 
 		if (_.config.clearBtn) {
 			hf.addEvent(picker.clockHolder.buttonsHolder.btnClear, 'click', () => {
+				if (_.input.matches(':disabled')) return
+
 				_.input.value = ''
 				hf.setAttributes(_.input, {
 					'value': '', 'data-time': null
